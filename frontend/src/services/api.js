@@ -53,6 +53,7 @@ export const libraryAPI = {
   getBooks: (params = {}) => api.get("/books", { params }),
   getBook: (id) => api.get(`/books/${id}`),
   createBook: (data) => api.post("/books", data),
+  addBook: (data) => api.post("/books", data), // Alias for createBook
   updateBook: (id, data) => api.put(`/books/${id}`, data),
   deleteBook: (id) => api.delete(`/books/${id}`),
 
