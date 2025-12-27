@@ -1,0 +1,1 @@
+UPDATE users SET password_hash = '$2b$12$7hAicLLlmUi9kVNgcfCcveV5m7zeYvEtpFwgkgld8ntgfxJnqqNby' WHERE email = 'librarian@library.edu.in';

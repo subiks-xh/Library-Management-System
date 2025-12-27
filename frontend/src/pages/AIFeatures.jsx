@@ -1,609 +1,356 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import {
   SparklesIcon,
   ChatBubbleLeftRightIcon,
+  PaperAirplaneIcon,
+  BookOpenIcon,
+  UsersIcon,
+  ClockIcon,
   MagnifyingGlassIcon,
   LightBulbIcon,
-  ChartBarIcon,
-  UserIcon,
-  BookOpenIcon,
-  ClockIcon,
-  StarIcon,
-  ArrowTrendingUpIcon,
+  DocumentTextIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon,
+  ArrowPathIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 
 function AIFeatures() {
-  const [selectedFeature, setSelectedFeature] = useState("recommendations");
-  const [chatInput, setChatInput] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  // AI-powered book recommendations
-  const recommendations = [
+  const { user } = useAuth();
+  const [messages, setMessages] = useState([
     {
       id: 1,
-      title: "Advanced React Patterns",
-      author: "Kent C. Dodds",
-      reason:
-        "Based on your interest in 'Modern JavaScript' and frequent checkouts in Programming category",
-      confidence: 95,
-      category: "Programming",
-      rating: 4.8,
-      cover:
-        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=200&h=250&fit=crop",
-      availability: "Available",
+      type: "bot",
+      content: `Hello ${user?.first_name || "there"}! 👋 I'm your AI Library Assistant. I can help you with:\n\n• Finding books and resources\n• Managing your library account\n• Academic research assistance\n• Reading recommendations\n• Library policies and hours\n\nWhat can I help you with today?`,
+      timestamp: new Date(),
     },
-    {
-      id: 2,
-      title: "Machine Learning Yearning",
-      author: "Andrew Ng",
-      reason:
-        "Popular among students from your department (IT) with similar reading patterns",
-      confidence: 87,
-      category: "AI/ML",
-      rating: 4.9,
-      cover:
-        "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=200&h=250&fit=crop",
-      availability: "1 copy available",
-    },
-    {
-      id: 3,
-      title: "Clean Architecture",
-      author: "Robert Martin",
-      reason:
-        "Trending among students who read 'Design Patterns' - which you borrowed last month",
-      confidence: 82,
-      category: "Software Engineering",
-      rating: 4.7,
-      cover:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=250&fit=crop",
-      availability: "Reserved",
-    },
-  ];
+  ]);
+  const [inputMessage, setInputMessage] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [suggestedQuestions, setSuggestedQuestions] = useState([
+    "What are the library hours?",
+    "Recommend books for computer science",
+    "How do I renew my books?",
+    "Find books by author name",
+  ]);
+  const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
-  // Smart search suggestions
-  const smartSuggestions = [
-    {
-      query: "data science python",
-      results: 15,
-      type: "Popular search",
-      trend: "↗️ Trending",
-    },
-    {
-      query: "tamil literature",
-      results: 8,
-      type: "Department match",
-      trend: "📚 Your department",
-    },
-    {
-      query: "machine learning",
-      results: 23,
-      type: "Interest-based",
-      trend: "⭐ Recommended",
-    },
-  ];
-
-  // Usage analytics
-  const userAnalytics = {
-    readingHabits: {
-      preferredCategories: ["Programming", "Data Science", "Literature"],
-      averageReadingTime: "2.3 weeks",
-      mostActiveTime: "Evening (6-8 PM)",
-      completionRate: "78%",
-    },
-    predictions: {
-      nextBookDate: "Dec 28, 2024",
-      suggestedCategory: "Machine Learning",
-      estimatedInterest: "High",
-    },
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // AI Chat responses
-  const chatResponses = [
-    {
-      user: "Find books about React hooks",
-      ai: "I found 5 books about React hooks. Based on your reading level, I recommend starting with 'React Hooks in Action' by John Larsen. It's available in shelf A-15-3 and has great reviews from your department students.",
-      timestamp: "2 minutes ago",
-    },
-    {
-      user: "When should I return my current books?",
-      ai: "You have 3 books due on December 28th. Based on your reading pattern, you typically finish books 2-3 days before the due date. I'll send you a reminder on December 25th.",
-      timestamp: "1 hour ago",
-    },
-  ];
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-  const aiFeatures = [
-    {
-      id: "recommendations",
-      name: "Smart Recommendations",
-      icon: LightBulbIcon,
-      description:
-        "AI-powered book suggestions based on your reading history and preferences",
-    },
-    {
-      id: "search",
-      name: "Intelligent Search",
-      icon: MagnifyingGlassIcon,
-      description:
-        "Smart search with auto-suggestions and semantic understanding",
-    },
-    {
-      id: "chat",
-      name: "AI Assistant",
-      icon: ChatBubbleLeftRightIcon,
-      description:
-        "Ask questions about books, availability, and get personalized help",
-    },
-    {
-      id: "analytics",
-      name: "Reading Analytics",
-      icon: ChartBarIcon,
-      description:
-        "Insights into your reading patterns and personalized predictions",
-    },
-  ];
+  const simulateAIResponse = (userMessage) => {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Library hours
+    if (lowerMessage.includes("hours") || lowerMessage.includes("timings") || lowerMessage.includes("open")) {
+      return {
+        content: `📅 **Library Hours:**\n\n**Monday - Friday:** 8:00 AM - 8:00 PM\n**Saturday:** 9:00 AM - 6:00 PM\n**Sunday:** 10:00 AM - 4:00 PM\n\n**Special Hours:**\n• Extended hours during exams (24/7)\n• Reduced hours during holidays\n• Digital library accessible 24/7\n\nIs there anything specific about our hours you'd like to know?`,
+        suggestions: ["Extended exam hours", "Holiday schedule", "Digital library access"],
+      };
+    }
 
-  const handleChatSubmit = (e) => {
-    e.preventDefault();
-    if (chatInput.trim()) {
-      console.log("Chat query:", chatInput);
-      setChatInput("");
+    // Book recommendations
+    if (lowerMessage.includes("recommend") || lowerMessage.includes("suggest") || lowerMessage.includes("books for")) {
+      const subject = lowerMessage.includes("computer") ? "Computer Science" :
+                    lowerMessage.includes("math") ? "Mathematics" :
+                    lowerMessage.includes("engineering") ? "Engineering" : "general";
+      
+      return {
+        content: `📚 **Book Recommendations for ${subject}:**\n\n**Popular Right Now:**\n• "Clean Code" by Robert Martin\n• "Design Patterns" by Gang of Four\n• "Introduction to Algorithms" by Cormen\n\n**Based on your profile:**\n• "Advanced React Patterns" - Available\n• "System Design Interview" - 2 copies left\n• "Machine Learning Yearning" - Digital copy available\n\n**Trending in your department:**\n• "Microservices Patterns" - High demand\n• "Database Internals" - New arrival\n\nWould you like detailed information about any of these books?`,
+        suggestions: ["Reserve a book", "See more recommendations", "Check availability"],
+      };
+    }
+
+    // Book renewal
+    if (lowerMessage.includes("renew") || lowerMessage.includes("extend") || lowerMessage.includes("due date")) {
+      return {
+        content: `📖 **Book Renewal Information:**\n\n**Your Current Books:**\n• "Introduction to Computer Science" - Due Jan 15, 2026 ✅\n• "Advanced Mathematics" - Due Jan 20, 2026 ✅\n\n**Renewal Rules:**\n• Maximum 2 renewals per book\n• Can't renew if book is reserved by others\n• Renewal extends due date by 3 weeks\n• No renewals if you have overdue fines\n\n**How to Renew:**\n1. Click "My Library History" in your profile\n2. Select books to renew\n3. Or ask me to renew them for you!\n\nWould you like me to renew any of your books now?`,
+        suggestions: ["Renew all books", "Check due dates", "View my history"],
+      };
+    }
+
+    // Search for books
+    if (lowerMessage.includes("find") || lowerMessage.includes("search") || lowerMessage.includes("author")) {
+      return {
+        content: `🔍 **Book Search Help:**\n\n**Search Options:**\n• By title: "Introduction to..."  \n• By author: "Robert Martin", "Martin Fowler"\n• By ISBN: 978-0123456789\n• By subject: "Computer Science", "Mathematics"\n• By keyword: "algorithm", "database", "AI"\n\n**Advanced Search:**\n• Use quotes for exact phrases: "machine learning"\n• Combine terms: author:Martin AND subject:programming\n• Filter by availability: available:true\n\n**Quick Search Shortcuts:**\n• Type author name + book topic\n• Use the search bar in the navbar\n• Browse by categories\n\nWhat book or author are you looking for?`,
+        suggestions: ["Search for specific author", "Browse categories", "Advanced search tips"],
+      };
+    }
+
+    // Account information
+    if (lowerMessage.includes("account") || lowerMessage.includes("profile") || lowerMessage.includes("history")) {
+      return {
+        content: `👤 **Your Library Account:**\n\n**Account Status:** Active ✅\n**Member Since:** ${new Date(user?.created_at || Date.now()).toLocaleDateString()}\n**User ID:** ${user?.register_number || user?.id}\n\n**Current Activity:**\n• Books Borrowed: 2\n• Books Reserved: 1  \n• Overdue Books: 0\n• Outstanding Fines: ₹0\n\n**Quick Actions:**\n• View detailed history\n• Update profile information\n• Change password\n• Set notification preferences\n\nWhat would you like to manage in your account?`,
+        suggestions: ["View borrowing history", "Update profile", "Notification settings"],
+      };
+    }
+
+    // Policies and rules
+    if (lowerMessage.includes("policy") || lowerMessage.includes("rules") || lowerMessage.includes("fine")) {
+      return {
+        content: `📋 **Library Policies:**\n\n**Borrowing Limits:**\n• Students: 3 books max\n• Faculty: 5 books max\n• Research scholars: 7 books max\n\n**Loan Periods:**\n• General books: 3 weeks\n• Reference books: 7 days\n• Rare books: Library use only\n\n**Fines:**\n• Overdue: ₹2 per day per book\n• Lost book: Replacement cost + ₹50\n• Damage: Assessment-based fine\n\n**Rules:**\n• No food/drinks in library\n• Mobile phones on silent\n• Books must be returned by due date\n• Reservations held for 3 days\n\nAny specific policy you'd like to know about?`,
+        suggestions: ["Fine calculation", "Reservation policy", "Damage policy"],
+      };
+    }
+
+    // Default response with context awareness
+    return {
+      content: `I understand you're asking about "${userMessage}". Let me help you with that!\n\n**I can assist you with:**\n\n🔍 **Search & Discovery**\n• Find books by title, author, or subject\n• Get personalized recommendations\n• Check book availability\n\n📚 **Library Services**\n• Borrow, renew, and return books\n• Reserve popular books\n• Access digital resources\n\n👤 **Account Management**\n• View your borrowing history\n• Check due dates and fines\n• Update profile information\n\n⏰ **Information & Policies**\n• Library hours and locations\n• Borrowing rules and policies\n• Academic research support\n\nCould you be more specific about what you need help with?`,
+      suggestions: [
+        "Library hours",
+        "Find a book",
+        "My account status",
+        "Borrowing policies",
+      ],
+    };
+  };
+
+  const handleSendMessage = async () => {
+    if (!inputMessage.trim()) return;
+
+    const userMessage = {
+      id: Date.now(),
+      type: "user",
+      content: inputMessage,
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputMessage("");
+    setIsTyping(true);
+
+    // Simulate AI processing time
+    setTimeout(() => {
+      const aiResponse = simulateAIResponse(inputMessage);
+      
+      const botMessage = {
+        id: Date.now() + 1,
+        type: "bot",
+        content: aiResponse.content,
+        timestamp: new Date(),
+        suggestions: aiResponse.suggestions,
+      };
+
+      setMessages(prev => [...prev, botMessage]);
+      setSuggestedQuestions(aiResponse.suggestions || []);
+      setIsTyping(false);
+    }, Math.random() * 1000 + 500); // Random delay between 500-1500ms
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setInputMessage(suggestion);
+    inputRef.current?.focus();
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
-  const handleSmartSearch = (suggestion) => {
-    setSearchQuery(suggestion.query);
-    console.log("Searching for:", suggestion.query);
+  const clearChat = () => {
+    setMessages([
+      {
+        id: 1,
+        type: "bot",
+        content: `Hello ${user?.first_name || "there"}! 👋 I'm your AI Library Assistant. How can I help you today?`,
+        timestamp: new Date(),
+      },
+    ]);
+    setSuggestedQuestions([
+      "What are the library hours?",
+      "Recommend books for computer science", 
+      "How do I renew my books?",
+      "Find books by author name",
+    ]);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto">
       {/* Header */}
-      <div className="page-header">
-        <h1 className="page-title">✨ AI-Powered Features</h1>
-        <p className="page-subtitle">
-          Experience intelligent library management with machine learning and AI
-          assistance
-        </p>
-      </div>
-
-      {/* Feature Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="border-b border-gray-200">
-          <nav className="flex space-x-8 px-6">
-            {aiFeatures.map((feature) => (
-              <button
-                key={feature.id}
-                onClick={() => setSelectedFeature(feature.id)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
-                  selectedFeature === feature.id
-                    ? "border-primary-500 text-primary-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                <feature.icon className="w-5 h-5" />
-                <span>{feature.name}</span>
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        <div className="p-6">
-          {selectedFeature === "recommendations" && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <SparklesIcon className="mx-auto h-12 w-12 text-primary-600" />
-                <h3 className="mt-2 text-lg font-semibold text-gray-900">
-                  Personalized Book Recommendations
-                </h3>
-                <p className="text-gray-600 mt-1">
-                  AI analyzes your reading patterns and suggests books you'll
-                  love
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {recommendations.map((book) => (
-                  <div
-                    key={book.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-start space-x-3">
-                      <img
-                        src={book.cover}
-                        alt={book.title}
-                        className="w-16 h-20 object-cover rounded"
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">
-                          {book.title}
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          by {book.author}
-                        </p>
-                        <div className="flex items-center mt-1">
-                          <StarIcon className="w-4 h-4 text-yellow-400 fill-current" />
-                          <span className="text-sm text-gray-600 ml-1">
-                            {book.rating}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded">
-                          {book.confidence}% match
-                        </span>
-                        <span
-                          className={`text-xs px-2 py-1 rounded ${
-                            book.availability === "Available"
-                              ? "bg-green-100 text-green-700"
-                              : book.availability.includes("copy")
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                          }`}
-                        >
-                          {book.availability}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-600 mb-3">
-                        {book.reason}
-                      </p>
-                      <button className="w-full text-sm bg-primary-600 text-white py-2 px-4 rounded hover:bg-primary-700 transition-colors">
-                        Reserve Book
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+      <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg p-6 mb-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <SparklesIcon className="w-8 h-8" />
             </div>
-          )}
-
-          {selectedFeature === "search" && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <MagnifyingGlassIcon className="mx-auto h-12 w-12 text-primary-600" />
-                <h3 className="mt-2 text-lg font-semibold text-gray-900">
-                  Intelligent Search & Discovery
-                </h3>
-                <p className="text-gray-600 mt-1">
-                  Smart search with AI-powered suggestions and semantic
-                  understanding
-                </p>
-              </div>
-
-              {/* Smart Search Bar */}
-              <div className="max-w-2xl mx-auto">
-                <div className="relative">
-                  <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Ask anything... 'books about machine learning for beginners'"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-lg"
-                  />
-                  <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary-600 text-white px-4 py-1.5 rounded-md hover:bg-primary-700">
-                    Search
-                  </button>
-                </div>
-              </div>
-
-              {/* Smart Suggestions */}
-              <div>
-                <h4 className="font-medium text-gray-900 mb-3">
-                  Smart Suggestions
-                </h4>
-                <div className="space-y-2">
-                  {smartSuggestions.map((suggestion, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleSmartSearch(suggestion)}
-                      className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <MagnifyingGlassIcon className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-900">
-                          {suggestion.query}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          ({suggestion.results} results)
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                          {suggestion.type}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {suggestion.trend}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {selectedFeature === "chat" && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <ChatBubbleLeftRightIcon className="mx-auto h-12 w-12 text-primary-600" />
-                <h3 className="mt-2 text-lg font-semibold text-gray-900">
-                  AI Library Assistant
-                </h3>
-                <p className="text-gray-600 mt-1">
-                  Get instant answers about books, availability, and
-                  personalized recommendations
-                </p>
-              </div>
-
-              {/* Chat Interface */}
-              <div className="max-w-2xl mx-auto">
-                <div className="border border-gray-200 rounded-lg">
-                  {/* Chat History */}
-                  <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
-                    {chatResponses.map((chat, index) => (
-                      <div key={index} className="space-y-2">
-                        <div className="flex justify-end">
-                          <div className="bg-primary-600 text-white px-4 py-2 rounded-lg max-w-sm">
-                            {chat.user}
-                          </div>
-                        </div>
-                        <div className="flex justify-start">
-                          <div className="bg-gray-100 text-gray-900 px-4 py-2 rounded-lg max-w-sm">
-                            {chat.ai}
-                          </div>
-                        </div>
-                        <div className="text-xs text-gray-500 text-center">
-                          {chat.timestamp}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Chat Input */}
-                  <form
-                    onSubmit={handleChatSubmit}
-                    className="border-t border-gray-200 p-4"
-                  >
-                    <div className="flex space-x-3">
-                      <input
-                        type="text"
-                        value={chatInput}
-                        onChange={(e) => setChatInput(e.target.value)}
-                        placeholder="Ask me anything about the library..."
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                      />
-                      <button
-                        type="submit"
-                        className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700"
-                      >
-                        Send
-                      </button>
-                    </div>
-                  </form>
-                </div>
-
-                {/* Quick Questions */}
-                <div className="mt-4">
-                  <p className="text-sm text-gray-600 mb-2">
-                    Try these questions:
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      "What books are due soon?",
-                      "Find programming books",
-                      "Show my reading history",
-                      "Reserve a popular book",
-                    ].map((question, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setChatInput(question)}
-                        className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-200"
-                      >
-                        {question}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {selectedFeature === "analytics" && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <ChartBarIcon className="mx-auto h-12 w-12 text-primary-600" />
-                <h3 className="mt-2 text-lg font-semibold text-gray-900">
-                  Personal Reading Analytics
-                </h3>
-                <p className="text-gray-600 mt-1">
-                  Insights into your reading patterns and AI-powered predictions
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Reading Habits */}
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-6">
-                  <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
-                    <BookOpenIcon className="w-5 h-5 mr-2 text-blue-600" />
-                    Reading Habits Analysis
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-700">
-                        Preferred Categories:
-                      </span>
-                      <div className="flex space-x-1">
-                        {userAnalytics.readingHabits.preferredCategories.map(
-                          (cat, idx) => (
-                            <span
-                              key={idx}
-                              className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded"
-                            >
-                              {cat}
-                            </span>
-                          )
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-700">
-                        Average Reading Time:
-                      </span>
-                      <span className="font-medium">
-                        {userAnalytics.readingHabits.averageReadingTime}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-700">Most Active Time:</span>
-                      <span className="font-medium">
-                        {userAnalytics.readingHabits.mostActiveTime}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-700">Completion Rate:</span>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-20 bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-blue-600 h-2 rounded-full"
-                            style={{ width: "78%" }}
-                          ></div>
-                        </div>
-                        <span className="font-medium">
-                          {userAnalytics.readingHabits.completionRate}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* AI Predictions */}
-                <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-lg p-6">
-                  <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
-                    <SparklesIcon className="w-5 h-5 mr-2 text-green-600" />
-                    AI Predictions
-                  </h4>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <ClockIcon className="w-5 h-5 text-green-600" />
-                      <div>
-                        <p className="text-sm text-gray-700">
-                          Next book checkout predicted:
-                        </p>
-                        <p className="font-medium text-gray-900">
-                          {userAnalytics.predictions.nextBookDate}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <BookOpenIcon className="w-5 h-5 text-green-600" />
-                      <div>
-                        <p className="text-sm text-gray-700">
-                          Suggested category:
-                        </p>
-                        <p className="font-medium text-gray-900">
-                          {userAnalytics.predictions.suggestedCategory}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <ArrowTrendingUpIcon className="w-5 h-5 text-green-600" />
-                      <div>
-                        <p className="text-sm text-gray-700">Interest level:</p>
-                        <p className="font-medium text-green-600">
-                          {userAnalytics.predictions.estimatedInterest}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Reading Goals */}
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h4 className="font-semibold text-gray-900 mb-4">
-                  AI-Suggested Reading Goals
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                    <ExclamationTriangleIcon className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                    <h5 className="font-medium text-gray-900">
-                      Complete Current Books
-                    </h5>
-                    <p className="text-sm text-gray-600">
-                      You have 2 books 80% read
-                    </p>
-                  </div>
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <BookOpenIcon className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                    <h5 className="font-medium text-gray-900">
-                      Explore New Genre
-                    </h5>
-                    <p className="text-sm text-gray-600">
-                      Try Philosophy - growing trend
-                    </p>
-                  </div>
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <CheckCircleIcon className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                    <h5 className="font-medium text-gray-900">
-                      Monthly Target
-                    </h5>
-                    <p className="text-sm text-gray-600">
-                      3 books per month (achievable)
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* AI Benefits Info */}
-      <div className="bg-gradient-to-r from-primary-50 to-blue-50 border border-primary-200 rounded-lg p-6">
-        <div className="flex items-start space-x-3">
-          <SparklesIcon className="w-6 h-6 text-primary-600 mt-1" />
-          <div>
-            <h3 className="text-lg font-semibold text-primary-900 mb-2">
-              How AI Enhances Your Library Experience
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-primary-800">
-              <div>
-                <h4 className="font-medium mb-1">
-                  🎯 Personalized Recommendations
-                </h4>
-                <p>
-                  Machine learning analyzes your reading patterns to suggest
-                  books you'll love
-                </p>
-              </div>
-              <div>
-                <h4 className="font-medium mb-1">🔍 Smart Search</h4>
-                <p>
-                  Natural language processing understands context for better
-                  search results
-                </p>
-              </div>
-              <div>
-                <h4 className="font-medium mb-1">📊 Predictive Analytics</h4>
-                <p>
-                  Forecast your reading behavior and optimize library resource
-                  allocation
-                </p>
-              </div>
-              <div>
-                <h4 className="font-medium mb-1">💬 Intelligent Assistant</h4>
-                <p>
-                  24/7 AI chat support for instant answers about books and
-                  library services
-                </p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-bold">AI Library Assistant</h1>
+              <p className="text-green-100">
+                Your intelligent companion for all library needs
+              </p>
             </div>
           </div>
+          <div className="hidden sm:block text-right">
+            <div className="text-sm opacity-90">Powered by</div>
+            <div className="font-bold">LibMS AI</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Chat Interface */}
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        {/* Chat Header */}
+        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-gray-900">
+                AI Assistant - Online
+              </span>
+            </div>
+            <button
+              onClick={clearChat}
+              className="flex items-center space-x-2 text-sm text-gray-600 hover:text-red-600 transition-colors"
+            >
+              <XMarkIcon className="w-4 h-4" />
+              <span>Clear Chat</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div className="h-96 overflow-y-auto p-6 space-y-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${
+                message.type === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg ${
+                  message.type === "user"
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-100 text-gray-900"
+                }`}
+              >
+                <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                <div className="text-xs mt-2 opacity-70">
+                  {message.timestamp.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
+                
+                {/* Suggestions */}
+                {message.suggestions && message.suggestions.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    <div className="text-xs font-medium opacity-80">
+                      Quick actions:
+                    </div>
+                    {message.suggestions.map((suggestion, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className="block w-full text-left px-3 py-1 text-xs bg-white/20 hover:bg-white/30 rounded-md transition-colors"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+
+          {/* Typing Indicator */}
+          {isTyping && (
+            <div className="flex justify-start">
+              <div className="bg-gray-100 text-gray-900 px-4 py-3 rounded-lg max-w-xs">
+                <div className="flex items-center space-x-2">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: "0.1s"}}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: "0.2s"}}></div>
+                  </div>
+                  <span className="text-xs text-gray-500">AI is typing...</span>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Suggested Questions */}
+        {suggestedQuestions.length > 0 && (
+          <div className="px-6 py-3 bg-gray-50 border-t border-gray-200">
+            <div className="text-xs text-gray-600 mb-2">Suggested questions:</div>
+            <div className="flex flex-wrap gap-2">
+              {suggestedQuestions.map((question, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSuggestionClick(question)}
+                  className="px-3 py-1 text-xs bg-white border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Input */}
+        <div className="px-6 py-4 border-t border-gray-200">
+          <div className="flex space-x-3">
+            <textarea
+              ref={inputRef}
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask me anything about the library..."
+              className="flex-1 min-h-[44px] max-h-32 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              disabled={isTyping}
+            />
+            <button
+              onClick={handleSendMessage}
+              disabled={!inputMessage.trim() || isTyping}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <PaperAirplaneIcon className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center space-x-3 mb-4">
+            <BookOpenIcon className="w-8 h-8 text-blue-500" />
+            <h3 className="text-lg font-semibold">Smart Recommendations</h3>
+          </div>
+          <p className="text-gray-600 text-sm">
+            Get personalized book suggestions based on your reading history and preferences.
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center space-x-3 mb-4">
+            <MagnifyingGlassIcon className="w-8 h-8 text-green-500" />
+            <h3 className="text-lg font-semibold">Intelligent Search</h3>
+          </div>
+          <p className="text-gray-600 text-sm">
+            Natural language search that understands context and provides better results.
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center space-x-3 mb-4">
+            <ChatBubbleLeftRightIcon className="w-8 h-8 text-purple-500" />
+            <h3 className="text-lg font-semibold">24/7 Support</h3>
+          </div>
+          <p className="text-gray-600 text-sm">
+            Instant answers to your library questions anytime, anywhere.
+          </p>
         </div>
       </div>
     </div>

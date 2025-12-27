@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Books from "./pages/Books";
 import DigitalLibrary from "./pages/DigitalLibrary";
@@ -15,43 +18,92 @@ import QRCodeGenerator from "./pages/QRCodeGenerator";
 import NotificationCenter from "./pages/NotificationCenter";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
+import ProfileSettings from "./pages/ProfileSettings";
+import MyLibraryHistory from "./pages/MyLibraryHistory";
+import SearchResults from "./pages/SearchResults";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isAuthenticated, user, loading, logout } = useAuth();
+  const location = useLocation();
+
+  // Show loading spinner while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
+      </div>
+    );
+  }
+
+  // Check if current route is public (no auth required)
+  const publicRoutes = ["/", "/login", "/register"];
+  const isPublicRoute = publicRoutes.includes(location.pathname);
+
+  // If not authenticated and trying to access protected route, redirect to login
+  if (!isAuthenticated && !isPublicRoute) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // If authenticated and trying to access login/register, redirect to dashboard
+  if (
+    isAuthenticated &&
+    (location.pathname === "/login" || location.pathname === "/register")
+  ) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      {/* Public Routes (Home, Login, Register) */}
+      {isPublicRoute ? (
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      ) : (
+        // Protected Routes (Dashboard and all other pages)
+        <>
+          {/* Horizontal Navigation */}
+          <Navbar user={user} onLogout={logout} />
 
-      {/* Sidebar */}
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
-      {/* Main Content */}
-      <div className="lg:pl-64">
-        <main className="flex-1">
-          <div className="px-4 sm:px-6 lg:px-8 py-8">
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/books" element={<Books />} />
-              <Route path="/digital-library" element={<DigitalLibrary />} />
-              <Route path="/categories" element={<Categories />} />
-              <Route path="/students" element={<Students />} />
-              <Route path="/issue" element={<IssueBooks />} />
-              <Route path="/return" element={<ReturnBooks />} />
-              <Route path="/reservations" element={<Reservations />} />
-              <Route path="/ai-features" element={<AIFeatures />} />
-              <Route path="/qr-generator" element={<QRCodeGenerator />} />
-              <Route path="/notifications" element={<NotificationCenter />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+          {/* Main Content */}
+          <div className="min-h-screen">
+            <main className="flex-1">
+              <div className="px-4 sm:px-6 lg:px-8 py-8">
+                <Routes>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/books" element={<Books />} />
+                  <Route path="/digital-library" element={<DigitalLibrary />} />
+                  <Route path="/categories" element={<Categories />} />
+                  <Route path="/students" element={<Students />} />
+                  <Route path="/issue" element={<IssueBooks />} />
+                  <Route path="/return" element={<ReturnBooks />} />
+                  <Route path="/reservations" element={<Reservations />} />
+                  <Route path="/ai-features" element={<AIFeatures />} />
+                  <Route path="/qr-generator" element={<QRCodeGenerator />} />
+                  <Route
+                    path="/notifications"
+                    element={<NotificationCenter />}
+                  />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/profile" element={<ProfileSettings />} />
+                  <Route path="/library-history" element={<MyLibraryHistory />} />
+                  <Route path="/search" element={<SearchResults />} />
+                  <Route
+                    path="/"
+                    element={<Navigate to="/dashboard" replace />}
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
+            </main>
           </div>
-        </main>
-      </div>
+        </>
+      )}
     </div>
   );
 }

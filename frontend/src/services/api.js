@@ -16,7 +16,7 @@ const api = axios.create({
 // Request interceptor to add auth token if available
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("authToken"); // Changed from "token" to "authToken"
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -35,10 +35,16 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Unauthorized - clear token and redirect to login
-      localStorage.removeItem("token");
+      localStorage.removeItem("authToken"); // Changed from "token" to "authToken"
       localStorage.removeItem("user");
-      // In Phase 2, redirect to login page
-      // window.location.href = '/login';
+      // Redirect to login page
+      if (
+        window.location.pathname !== "/login" &&
+        window.location.pathname !== "/register" &&
+        window.location.pathname !== "/"
+      ) {
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }
@@ -46,6 +52,16 @@ api.interceptors.response.use(
 
 // API endpoints
 export const libraryAPI = {
+  // Authentication
+  login: (credentials) => api.post("/auth/login", credentials),
+  demoLogin: (data) => api.post("/auth/demo-login", data),
+  register: (userData) => api.post("/auth/register", userData),
+  logout: () => api.post("/auth/logout"),
+  refreshToken: () => api.post("/auth/refresh"),
+  forgotPassword: (email) => api.post("/auth/forgot-password", { email }),
+  resetPassword: (token, password) =>
+    api.post("/auth/reset-password", { token, password }),
+
   // Dashboard
   getDashboardStats: () => api.get("/dashboard"),
 
