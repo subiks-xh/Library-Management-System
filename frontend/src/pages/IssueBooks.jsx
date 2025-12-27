@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { libraryAPI } from "../services/api";
 import {
   ArrowRightOnRectangleIcon,
@@ -20,7 +20,7 @@ function IssueBooks() {
     registerNumber: "",
     bookId: "",
     issueDays: 14,
-    issueDate: new Date().toISOString().split('T')[0]
+    issueDate: new Date().toISOString().split("T")[0],
   });
   const [searchStudent, setSearchStudent] = useState("");
   const [searchBook, setSearchBook] = useState("");
@@ -33,22 +33,20 @@ function IssueBooks() {
   const queryClient = useQueryClient();
 
   // Mutation for issuing books
-  const issueBookMutation = useMutation(
-    (issueData) => libraryAPI.issueBook(issueData),
-    {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries(['recentIssues']);
-        queryClient.invalidateQueries(['books']);
-        queryClient.invalidateQueries(['students']);
-        setLastIssue(data);
-        setShowSuccessModal(true);
-        resetForm();
-      },
-      onError: (error) => {
-        alert(error.message || 'Failed to issue book. Please try again.');
-      }
-    }
-  );
+  const issueBookMutation = useMutation({
+    mutationFn: (issueData) => libraryAPI.issueBook(issueData),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["recentIssues"]);
+      queryClient.invalidateQueries(["books"]);
+      queryClient.invalidateQueries(["students"]);
+      setLastIssue(data);
+      setShowSuccessModal(true);
+      resetForm();
+    },
+    onError: (error) => {
+      alert(error.message || "Failed to issue book. Please try again.");
+    },
+  });
 
   // Mock data for students
   const students = [
@@ -60,11 +58,12 @@ function IssueBooks() {
       year: 4,
       email: "arjun.k@college.edu.in",
       phone: "9876543210",
-      photo_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      photo_url:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       booksIssued: 2,
       overdueBooks: 0,
       maxBooksAllowed: 5,
-      status: "Active"
+      status: "Active",
     },
     {
       id: 2,
@@ -74,11 +73,12 @@ function IssueBooks() {
       year: 3,
       email: "priya.l@college.edu.in",
       phone: "9876543211",
-      photo_url: "https://images.unsplash.com/photo-1494790108755-2616b612b829?w=150&h=150&fit=crop&crop=face",
+      photo_url:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b829?w=150&h=150&fit=crop&crop=face",
       booksIssued: 1,
       overdueBooks: 1,
       maxBooksAllowed: 5,
-      status: "Active"
+      status: "Active",
     },
     {
       id: 3,
@@ -88,12 +88,13 @@ function IssueBooks() {
       year: 2,
       email: "rajesh.k@college.edu.in",
       phone: "9876543212",
-      photo_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      photo_url:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       booksIssued: 3,
       overdueBooks: 0,
       maxBooksAllowed: 5,
-      status: "Active"
-    }
+      status: "Active",
+    },
   ];
 
   // Mock data for available books
@@ -110,8 +111,9 @@ function IssueBooks() {
       year: 2019,
       copies: 5,
       availableCopies: 3,
-      cover_image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=300&fit=crop",
-      location: "Section A, Shelf 1"
+      cover_image:
+        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=300&fit=crop",
+      location: "Section A, Shelf 1",
     },
     {
       id: 2,
@@ -125,8 +127,9 @@ function IssueBooks() {
       year: 2020,
       copies: 8,
       availableCopies: 6,
-      cover_image: "https://images.unsplash.com/photo-1562813733-b31f71025d54?w=200&h=300&fit=crop",
-      location: "Section B, Shelf 3"
+      cover_image:
+        "https://images.unsplash.com/photo-1562813733-b31f71025d54?w=200&h=300&fit=crop",
+      location: "Section B, Shelf 3",
     },
     {
       id: 3,
@@ -140,8 +143,9 @@ function IssueBooks() {
       year: 2018,
       copies: 12,
       availableCopies: 8,
-      cover_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=300&fit=crop",
-      location: "Section C, Shelf 2"
+      cover_image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=300&fit=crop",
+      location: "Section C, Shelf 2",
     },
     {
       id: 4,
@@ -155,9 +159,10 @@ function IssueBooks() {
       year: 2019,
       copies: 6,
       availableCopies: 4,
-      cover_image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=300&fit=crop",
-      location: "Section D, Shelf 1"
-    }
+      cover_image:
+        "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=300&fit=crop",
+      location: "Section D, Shelf 1",
+    },
   ];
 
   // Mock data for recent issues
@@ -173,7 +178,8 @@ function IssueBooks() {
       dueDate: "2025-01-08",
       status: "Active",
       daysRemaining: 6,
-      photo_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+      photo_url:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
     },
     {
       id: 2,
@@ -186,7 +192,8 @@ function IssueBooks() {
       dueDate: "2025-01-06",
       status: "Active",
       daysRemaining: 4,
-      photo_url: "https://images.unsplash.com/photo-1494790108755-2616b612b829?w=150&h=150&fit=crop&crop=face"
+      photo_url:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b829?w=150&h=150&fit=crop&crop=face",
     },
     {
       id: 3,
@@ -199,57 +206,66 @@ function IssueBooks() {
       dueDate: "2025-01-03",
       status: "Active",
       daysRemaining: 1,
-      photo_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-    }
+      photo_url:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    },
   ];
 
   // Filtered data based on search
-  const filteredStudents = students.filter(student =>
-    student.name.toLowerCase().includes(searchStudent.toLowerCase()) ||
-    student.registerNumber.toLowerCase().includes(searchStudent.toLowerCase())
+  const filteredStudents = students.filter(
+    (student) =>
+      student.name.toLowerCase().includes(searchStudent.toLowerCase()) ||
+      student.registerNumber.toLowerCase().includes(searchStudent.toLowerCase())
   );
 
-  const filteredBooks = availableBooks.filter(book =>
-    book.title.toLowerCase().includes(searchBook.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchBook.toLowerCase()) ||
-    book.accessionNumber.toLowerCase().includes(searchBook.toLowerCase())
+  const filteredBooks = availableBooks.filter(
+    (book) =>
+      book.title.toLowerCase().includes(searchBook.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchBook.toLowerCase()) ||
+      book.accessionNumber.toLowerCase().includes(searchBook.toLowerCase())
   );
 
   // Calculate due date
   const calculateDueDate = (issueDate, days) => {
     const due = new Date(issueDate);
     due.setDate(due.getDate() + parseInt(days));
-    return due.toISOString().split('T')[0];
+    return due.toISOString().split("T")[0];
   };
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!selectedStudent || !selectedBook) {
-      alert('Please select both a student and a book.');
+      alert("Please select both a student and a book.");
       return;
     }
 
     // Validation checks
-    if (selectedStudent.status !== 'Active') {
-      alert('Cannot issue books to inactive students.');
+    if (selectedStudent.status !== "Active") {
+      alert("Cannot issue books to inactive students.");
       return;
     }
 
     if (selectedStudent.booksIssued >= selectedStudent.maxBooksAllowed) {
-      alert(`Student has reached the maximum limit of ${selectedStudent.maxBooksAllowed} books.`);
+      alert(
+        `Student has reached the maximum limit of ${selectedStudent.maxBooksAllowed} books.`
+      );
       return;
     }
 
     if (selectedStudent.overdueBooks > 0) {
-      if (!window.confirm('Student has overdue books. Do you still want to issue a new book?')) {
+      if (
+        !window.confirm(
+          "Student has overdue books. Do you still want to issue a new book?"
+        )
+      ) {
         return;
       }
     }
 
     if (selectedBook.availableCopies <= 0) {
-      alert('No copies of this book are currently available.');
+      alert("No copies of this book are currently available.");
       return;
     }
 
@@ -258,7 +274,7 @@ function IssueBooks() {
       book_id: selectedBook.id,
       issue_date: formData.issueDate,
       due_date: calculateDueDate(formData.issueDate, formData.issueDays),
-      issue_days: formData.issueDays
+      issue_days: formData.issueDays,
     };
 
     issueBookMutation.mutate(issueData);
@@ -266,18 +282,21 @@ function IssueBooks() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const selectStudent = (student) => {
     setSelectedStudent(student);
-    setFormData(prev => ({ ...prev, registerNumber: student.registerNumber }));
+    setFormData((prev) => ({
+      ...prev,
+      registerNumber: student.registerNumber,
+    }));
     setSearchStudent("");
   };
 
   const selectBook = (book) => {
     setSelectedBook(book);
-    setFormData(prev => ({ ...prev, bookId: book.accessionNumber }));
+    setFormData((prev) => ({ ...prev, bookId: book.accessionNumber }));
     setSearchBook("");
   };
 
@@ -286,7 +305,7 @@ function IssueBooks() {
       registerNumber: "",
       bookId: "",
       issueDays: 14,
-      issueDate: new Date().toISOString().split('T')[0]
+      issueDate: new Date().toISOString().split("T")[0],
     });
     setSelectedStudent(null);
     setSelectedBook(null);
@@ -298,11 +317,14 @@ function IssueBooks() {
   const simulateBarcodeScan = (type) => {
     setScanning(true);
     setTimeout(() => {
-      if (type === 'student') {
-        const randomStudent = students[Math.floor(Math.random() * students.length)];
+      if (type === "student") {
+        const randomStudent =
+          students[Math.floor(Math.random() * students.length)];
         selectStudent(randomStudent);
-      } else if (type === 'book') {
-        const availableBook = availableBooks.find(book => book.availableCopies > 0);
+      } else if (type === "book") {
+        const availableBook = availableBooks.find(
+          (book) => book.availableCopies > 0
+        );
         if (availableBook) {
           selectBook(availableBook);
         }
@@ -329,14 +351,14 @@ function IssueBooks() {
               <ArrowRightOnRectangleIcon className="w-5 h-5 text-primary-600 mr-2" />
               <h2 className="text-lg font-semibold">Issue New Book</h2>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Student Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Select Student *
                 </label>
-                
+
                 {selectedStudent ? (
                   <div className="flex items-center p-4 bg-green-50 border border-green-200 rounded-lg">
                     <img
@@ -345,15 +367,21 @@ function IssueBooks() {
                       className="w-12 h-12 rounded-full object-cover mr-4"
                     />
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">{selectedStudent.name}</div>
-                      <div className="text-sm text-gray-600">{selectedStudent.registerNumber}</div>
+                      <div className="font-medium text-gray-900">
+                        {selectedStudent.name}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {selectedStudent.registerNumber}
+                      </div>
                       <div className="text-xs text-gray-500">
-                        {selectedStudent.department} - Year {selectedStudent.year}
+                        {selectedStudent.department} - Year{" "}
+                        {selectedStudent.year}
                       </div>
                     </div>
                     <div className="text-right mr-4">
                       <div className="text-sm text-gray-600">
-                        Books: {selectedStudent.booksIssued}/{selectedStudent.maxBooksAllowed}
+                        Books: {selectedStudent.booksIssued}/
+                        {selectedStudent.maxBooksAllowed}
                       </div>
                       {selectedStudent.overdueBooks > 0 && (
                         <div className="text-xs text-red-600">
@@ -365,7 +393,10 @@ function IssueBooks() {
                       type="button"
                       onClick={() => {
                         setSelectedStudent(null);
-                        setFormData(prev => ({ ...prev, registerNumber: "" }));
+                        setFormData((prev) => ({
+                          ...prev,
+                          registerNumber: "",
+                        }));
                       }}
                       className="text-red-600 hover:text-red-800"
                     >
@@ -387,7 +418,7 @@ function IssueBooks() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => simulateBarcodeScan('student')}
+                        onClick={() => simulateBarcodeScan("student")}
                         disabled={scanning}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
                         title="Scan Student ID"
@@ -399,7 +430,7 @@ function IssueBooks() {
                         )}
                       </button>
                     </div>
-                    
+
                     {searchStudent && (
                       <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg">
                         {filteredStudents.map((student) => (
@@ -416,11 +447,16 @@ function IssueBooks() {
                                 className="w-8 h-8 rounded-full object-cover mr-3"
                               />
                               <div>
-                                <div className="font-medium text-sm">{student.name}</div>
-                                <div className="text-xs text-gray-600">{student.registerNumber}</div>
+                                <div className="font-medium text-sm">
+                                  {student.name}
+                                </div>
+                                <div className="text-xs text-gray-600">
+                                  {student.registerNumber}
+                                </div>
                               </div>
                               <div className="ml-auto text-xs text-gray-500">
-                                {student.booksIssued}/{student.maxBooksAllowed} books
+                                {student.booksIssued}/{student.maxBooksAllowed}{" "}
+                                books
                               </div>
                             </div>
                           </button>
@@ -441,7 +477,7 @@ function IssueBooks() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Select Book *
                 </label>
-                
+
                 {selectedBook ? (
                   <div className="flex items-center p-4 bg-green-50 border border-green-200 rounded-lg">
                     <img
@@ -450,8 +486,12 @@ function IssueBooks() {
                       className="w-12 h-16 object-cover rounded mr-4"
                     />
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">{selectedBook.title}</div>
-                      <div className="text-sm text-gray-600">by {selectedBook.author}</div>
+                      <div className="font-medium text-gray-900">
+                        {selectedBook.title}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        by {selectedBook.author}
+                      </div>
                       <div className="text-xs text-gray-500">
                         {selectedBook.accessionNumber} • {selectedBook.category}
                       </div>
@@ -468,7 +508,7 @@ function IssueBooks() {
                       type="button"
                       onClick={() => {
                         setSelectedBook(null);
-                        setFormData(prev => ({ ...prev, bookId: "" }));
+                        setFormData((prev) => ({ ...prev, bookId: "" }));
                       }}
                       className="text-red-600 hover:text-red-800"
                     >
@@ -490,7 +530,7 @@ function IssueBooks() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => simulateBarcodeScan('book')}
+                        onClick={() => simulateBarcodeScan("book")}
                         disabled={scanning}
                         className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
                         title="Scan Book Barcode"
@@ -502,7 +542,7 @@ function IssueBooks() {
                         )}
                       </button>
                     </div>
-                    
+
                     {searchBook && (
                       <div className="max-h-48 overflow-y-auto border border-gray-300 rounded-lg">
                         {filteredBooks.map((book) => (
@@ -513,8 +553,8 @@ function IssueBooks() {
                             disabled={book.availableCopies <= 0}
                             className={`w-full text-left p-3 border-b border-gray-200 last:border-b-0 ${
                               book.availableCopies > 0
-                                ? 'hover:bg-gray-50'
-                                : 'bg-gray-50 opacity-60 cursor-not-allowed'
+                                ? "hover:bg-gray-50"
+                                : "bg-gray-50 opacity-60 cursor-not-allowed"
                             }`}
                           >
                             <div className="flex items-center">
@@ -524,17 +564,26 @@ function IssueBooks() {
                                 className="w-8 h-10 object-cover rounded mr-3"
                               />
                               <div className="flex-1">
-                                <div className="font-medium text-sm">{book.title}</div>
-                                <div className="text-xs text-gray-600">{book.author}</div>
-                                <div className="text-xs text-gray-500">{book.accessionNumber}</div>
+                                <div className="font-medium text-sm">
+                                  {book.title}
+                                </div>
+                                <div className="text-xs text-gray-600">
+                                  {book.author}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {book.accessionNumber}
+                                </div>
                               </div>
-                              <div className={`ml-auto text-xs ${
-                                book.availableCopies > 0 ? 'text-green-600' : 'text-red-600'
-                              }`}>
-                                {book.availableCopies > 0 
+                              <div
+                                className={`ml-auto text-xs ${
+                                  book.availableCopies > 0
+                                    ? "text-green-600"
+                                    : "text-red-600"
+                                }`}
+                              >
+                                {book.availableCopies > 0
                                   ? `${book.availableCopies} available`
-                                  : 'Not available'
-                                }
+                                  : "Not available"}
                               </div>
                             </div>
                           </button>
@@ -591,11 +640,14 @@ function IssueBooks() {
                   <div className="flex items-center">
                     <CalendarIcon className="w-5 h-5 text-blue-600 mr-2" />
                     <span className="text-blue-900 font-medium">
-                      Due Date: {new Date(calculateDueDate(formData.issueDate, formData.issueDays)).toLocaleDateString('en-IN', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
+                      Due Date:{" "}
+                      {new Date(
+                        calculateDueDate(formData.issueDate, formData.issueDays)
+                      ).toLocaleDateString("en-IN", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
                       })}
                     </span>
                   </div>
@@ -613,7 +665,11 @@ function IssueBooks() {
                 </button>
                 <button
                   type="submit"
-                  disabled={issueBookMutation.isLoading || !selectedStudent || !selectedBook}
+                  disabled={
+                    issueBookMutation.isLoading ||
+                    !selectedStudent ||
+                    !selectedBook
+                  }
                   className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
                 >
                   {issueBookMutation.isLoading ? (
@@ -648,12 +704,17 @@ function IssueBooks() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Available Books</span>
                 <span className="font-semibold text-blue-600">
-                  {availableBooks.reduce((sum, book) => sum + book.availableCopies, 0)}
+                  {availableBooks.reduce(
+                    (sum, book) => sum + book.availableCopies,
+                    0
+                  )}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Total Students</span>
-                <span className="font-semibold text-purple-600">{students.length}</span>
+                <span className="font-semibold text-purple-600">
+                  {students.length}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Overdue Returns</span>
@@ -669,7 +730,10 @@ function IssueBooks() {
             </div>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {recentIssues.map((issue) => (
-                <div key={issue.id} className="flex items-center p-3 bg-gray-50 rounded-lg">
+                <div
+                  key={issue.id}
+                  className="flex items-center p-3 bg-gray-50 rounded-lg"
+                >
                   <img
                     src={issue.photo_url}
                     alt={issue.studentName}
@@ -679,18 +743,22 @@ function IssueBooks() {
                     <div className="text-sm font-medium text-gray-900 truncate">
                       {issue.bookTitle}
                     </div>
-                    <div className="text-xs text-gray-600">{issue.studentName}</div>
+                    <div className="text-xs text-gray-600">
+                      {issue.studentName}
+                    </div>
                     <div className="text-xs text-gray-500">
                       Due: {new Date(issue.dueDate).toLocaleDateString()}
                     </div>
                   </div>
-                  <div className={`text-xs px-2 py-1 rounded-full ${
-                    issue.daysRemaining <= 2 
-                      ? 'bg-red-100 text-red-800' 
-                      : issue.daysRemaining <= 5
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : 'bg-green-100 text-green-800'
-                  }`}>
+                  <div
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      issue.daysRemaining <= 2
+                        ? "bg-red-100 text-red-800"
+                        : issue.daysRemaining <= 5
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-green-100 text-green-800"
+                    }`}
+                  >
                     {issue.daysRemaining}d left
                   </div>
                 </div>
@@ -708,11 +776,11 @@ function IssueBooks() {
               <div className="flex items-center justify-center w-12 h-12 mx-auto bg-green-100 rounded-full mb-4">
                 <CheckCircleIcon className="w-6 h-6 text-green-600" />
               </div>
-              
+
               <h3 className="text-lg font-semibold text-center text-gray-900 mb-2">
                 Book Issued Successfully!
               </h3>
-              
+
               <div className="text-center text-gray-600 mb-6">
                 <p className="mb-2">
                   <strong>{selectedStudent?.name}</strong> has been issued
@@ -721,11 +789,16 @@ function IssueBooks() {
                   <strong>{selectedBook?.title}</strong>
                 </p>
                 <p>
-                  Due Date: <strong>{calculateDueDate(formData.issueDate, formData.issueDays) && 
-                    new Date(calculateDueDate(formData.issueDate, formData.issueDays)).toLocaleDateString()}</strong>
+                  Due Date:{" "}
+                  <strong>
+                    {calculateDueDate(formData.issueDate, formData.issueDays) &&
+                      new Date(
+                        calculateDueDate(formData.issueDate, formData.issueDays)
+                      ).toLocaleDateString()}
+                  </strong>
                 </p>
               </div>
-              
+
               <div className="flex justify-center space-x-3">
                 <button
                   onClick={() => setShowSuccessModal(false)}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { libraryAPI } from "../services/api";
 import {
   UserGroupIcon,
@@ -42,36 +42,30 @@ function Students() {
   const queryClient = useQueryClient();
 
   // Mutations for CRUD operations
-  const addStudentMutation = useMutation(
-    (newStudent) => libraryAPI.createStudent(newStudent),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["students"]);
-        setShowAddModal(false);
-        resetForm();
-      },
-    }
-  );
+  const addStudentMutation = useMutation({
+    mutationFn: (newStudent) => libraryAPI.createStudent(newStudent),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["students"]);
+      setShowAddModal(false);
+      resetForm();
+    },
+  });
 
-  const editStudentMutation = useMutation(
-    ({ id, ...data }) => libraryAPI.updateStudent(id, data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["students"]);
-        setShowEditModal(false);
-        resetForm();
-      },
-    }
-  );
+  const editStudentMutation = useMutation({
+    mutationFn: ({ id, ...data }) => libraryAPI.updateStudent(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["students"]);
+      setShowEditModal(false);
+      resetForm();
+    },
+  });
 
-  const deleteStudentMutation = useMutation(
-    (studentId) => libraryAPI.deleteStudent(studentId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["students"]);
-      },
-    }
-  );
+  const deleteStudentMutation = useMutation({
+    mutationFn: (studentId) => libraryAPI.deleteStudent(studentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["students"]);
+    },
+  });
 
   // Mock data with comprehensive student information
   const students = [

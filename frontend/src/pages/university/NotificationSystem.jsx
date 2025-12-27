@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   BellIcon,
   EnvelopeIcon,
@@ -38,28 +38,28 @@ function NotificationSystem() {
   const queryClient = useQueryClient();
 
   // Fetch notifications data
-  const { data: notificationsData, isLoading } = useQuery(
-    [
+  const { data: notificationsData, isLoading } = useQuery({
+    queryKey: [
       "notifications",
       { search: searchTerm, status: selectedStatus, type: selectedType },
     ],
-    () =>
+    queryFn: () =>
       fetchNotifications({
         search: searchTerm,
         status: selectedStatus,
         type: selectedType,
       }),
-    { refetchOnWindowFocus: false }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   const notifications = notificationsData?.data || mockNotifications;
 
   // Fetch notification statistics
-  const { data: statsData } = useQuery(
-    ["notification-stats"],
-    fetchNotificationStats,
-    { refetchOnWindowFocus: false }
-  );
+  const { data: statsData } = useQuery({
+    queryKey: ["notification-stats"],
+    queryFn: fetchNotificationStats,
+    refetchOnWindowFocus: false,
+  });
 
   const stats = statsData?.data || mockStats;
 

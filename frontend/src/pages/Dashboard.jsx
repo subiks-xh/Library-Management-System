@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { libraryAPI } from "../services/api";
 import { runConnectivityTest } from "../utils/apiTest";
@@ -186,16 +186,14 @@ function Dashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
-  const { data, isLoading, isError, refetch } = useQuery(
-    ["dashboard-stats", selectedTimeframe],
-    fetchDashboardStats,
-    {
-      refetchInterval: 30000, // Refresh every 30 seconds
-      onSuccess: () => {
-        setLastUpdated(new Date());
-      },
-    }
-  );
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["dashboard-stats", selectedTimeframe],
+    queryFn: fetchDashboardStats,
+    refetchInterval: 30000, // Refresh every 30 seconds
+    onSuccess: () => {
+      setLastUpdated(new Date());
+    },
+  });
 
   // Manual refresh function
   const handleRefresh = async () => {

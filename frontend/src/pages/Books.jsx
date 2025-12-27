@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { libraryAPI } from "../services/api";
 import {
   BookOpenIcon,
@@ -36,53 +36,47 @@ function Books() {
     data: booksData,
     isLoading,
     error,
-  } = useQuery(
-    ["books", { search: searchTerm }],
-    () => libraryAPI.getBooks({ search: searchTerm }),
-    {
-      enabled: true,
-      refetchOnWindowFocus: false,
-    }
-  );
+  } = useQuery({
+    queryKey: ["books", { search: searchTerm }],
+    queryFn: () => libraryAPI.getBooks({ search: searchTerm }),
+    enabled: true,
+    refetchOnWindowFocus: false,
+  });
 
   // Add book mutation
-  const addBookMutation = useMutation(
-    (newBook) => libraryAPI.addBook(newBook),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["books"]);
-        setShowAddModal(false);
-        setFormData({
-          isbn: "",
-          title: "",
-          author: "",
-          publisher: "",
-          category: "",
-          total_copies: 1,
-          price: 0,
-          language: "English",
-          location: "",
-          image_url: "",
-        });
-      },
-      onError: (error) => {
-        console.error("Error adding book:", error);
-      },
-    }
-  );
+  const addBookMutation = useMutation({
+    mutationFn: (newBook) => libraryAPI.addBook(newBook),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["books"]);
+      setShowAddModal(false);
+      setFormData({
+        isbn: "",
+        title: "",
+        author: "",
+        publisher: "",
+        category: "",
+        total_copies: 1,
+        price: 0,
+        language: "English",
+        location: "",
+        image_url: "",
+      });
+    },
+    onError: (error) => {
+      console.error("Error adding book:", error);
+    },
+  });
 
   // Delete book mutation
-  const deleteBookMutation = useMutation(
-    (bookId) => libraryAPI.deleteBook(bookId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["books"]);
-      },
-      onError: (error) => {
-        console.error("Error deleting book:", error);
-      },
-    }
-  );
+  const deleteBookMutation = useMutation({
+    mutationFn: (bookId) => libraryAPI.deleteBook(bookId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["books"]);
+    },
+    onError: (error) => {
+      console.error("Error deleting book:", error);
+    },
+  });
 
   // Use API data or fallback to mock data
   const books = booksData?.data?.data || [

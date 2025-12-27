@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   AcademicCapIcon,
   DocumentMagnifyingGlassIcon,
@@ -42,8 +42,8 @@ function ResearchManagement() {
   const queryClient = useQueryClient();
 
   // Fetch research projects
-  const { data: projectsData, isLoading: projectsLoading } = useQuery(
-    [
+  const { data: projectsData, isLoading: projectsLoading } = useQuery({
+    queryKey: [
       "research-projects",
       {
         search: searchTerm,
@@ -51,28 +51,28 @@ function ResearchManagement() {
         status: selectedStatus,
       },
     ],
-    () =>
+    queryFn: () =>
       fetchResearchProjects({
         search: searchTerm,
         category: selectedCategory,
         status: selectedStatus,
       }),
-    { refetchOnWindowFocus: false }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   // Fetch research papers
-  const { data: papersData, isLoading: papersLoading } = useQuery(
-    ["research-papers"],
-    fetchResearchPapers,
-    { refetchOnWindowFocus: false }
-  );
+  const { data: papersData, isLoading: papersLoading } = useQuery({
+    queryKey: ["research-papers"],
+    queryFn: fetchResearchPapers,
+    refetchOnWindowFocus: false,
+  });
 
   // Fetch researchers
-  const { data: researchersData, isLoading: researchersLoading } = useQuery(
-    ["researchers"],
-    fetchResearchers,
-    { refetchOnWindowFocus: false }
-  );
+  const { data: researchersData, isLoading: researchersLoading } = useQuery({
+    queryKey: ["researchers"],
+    queryFn: fetchResearchers,
+    refetchOnWindowFocus: false,
+  });
 
   const projects = projectsData?.data || mockProjects;
   const papers = papersData?.data || mockPapers;

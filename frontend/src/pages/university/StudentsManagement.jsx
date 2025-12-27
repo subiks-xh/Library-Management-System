@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   MagnifyingGlassIcon,
   PlusIcon,
@@ -32,8 +32,8 @@ function StudentsManagement() {
     data: studentsData,
     isLoading,
     error,
-  } = useQuery(
-    [
+  } = useQuery({
+    queryKey: [
       "students",
       {
         search: searchTerm,
@@ -42,18 +42,16 @@ function StudentsManagement() {
         status: selectedStatus,
       },
     ],
-    () =>
+    queryFn: () =>
       fetchStudents({
         search: searchTerm,
         department: selectedDepartment,
         year: selectedYear,
         status: selectedStatus,
       }),
-    {
-      keepPreviousData: true,
-      refetchOnWindowFocus: false,
-    }
-  );
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  });
 
   const students = studentsData?.data || mockStudentsData;
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   BuildingLibraryIcon,
   MapPinIcon,
@@ -24,11 +24,11 @@ function LibraryBranches() {
   const [showAddModal, setShowAddModal] = useState(false);
 
   // Mock data - Replace with actual API calls
-  const { data: branchesData, isLoading } = useQuery(
-    "library-branches",
-    fetchLibraryBranches,
-    { refetchOnWindowFocus: false }
-  );
+  const { data: branchesData, isLoading } = useQuery({
+    queryKey: ["library-branches"],
+    queryFn: fetchLibraryBranches,
+    refetchOnWindowFocus: false,
+  });
 
   const branches = branchesData?.data || mockBranchesData;
 

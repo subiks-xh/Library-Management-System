@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ComputerDesktopIcon,
   BookOpenIcon,
@@ -37,19 +37,19 @@ function DigitalResources() {
   const queryClient = useQueryClient();
 
   // Fetch digital resources
-  const { data: resourcesData, isLoading } = useQuery(
-    [
+  const { data: resourcesData, isLoading } = useQuery({
+    queryKey: [
       "digital-resources",
       { search: searchTerm, type: selectedType, access: selectedAccess },
     ],
-    () =>
+    queryFn: () =>
       fetchDigitalResources({
         search: searchTerm,
         type: selectedType,
         access: selectedAccess,
       }),
-    { refetchOnWindowFocus: false }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   const resources = resourcesData?.data || mockDigitalResources;
 

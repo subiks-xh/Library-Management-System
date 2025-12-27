@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   CubeIcon,
   ShoppingCartIcon,
@@ -52,8 +52,8 @@ function InventoryProcurement() {
   const queryClient = useQueryClient();
 
   // Fetch inventory data
-  const { data: inventoryData, isLoading: inventoryLoading } = useQuery(
-    [
+  const { data: inventoryData, isLoading: inventoryLoading } = useQuery({
+    queryKey: [
       "inventory",
       {
         search: searchTerm,
@@ -61,28 +61,28 @@ function InventoryProcurement() {
         status: selectedStatus,
       },
     ],
-    () =>
+    queryFn: () =>
       fetchInventoryData({
         search: searchTerm,
         category: selectedCategory,
         status: selectedStatus,
       }),
-    { refetchOnWindowFocus: false }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   // Fetch procurement data
-  const { data: procurementData, isLoading: procurementLoading } = useQuery(
-    ["procurement"],
-    fetchProcurementData,
-    { refetchOnWindowFocus: false }
-  );
+  const { data: procurementData, isLoading: procurementLoading } = useQuery({
+    queryKey: ["procurement"],
+    queryFn: fetchProcurementData,
+    refetchOnWindowFocus: false,
+  });
 
   // Fetch vendors data
-  const { data: vendorsData, isLoading: vendorsLoading } = useQuery(
-    ["vendors"],
-    fetchVendorsData,
-    { refetchOnWindowFocus: false }
-  );
+  const { data: vendorsData, isLoading: vendorsLoading } = useQuery({
+    queryKey: ["vendors"],
+    queryFn: fetchVendorsData,
+    refetchOnWindowFocus: false,
+  });
 
   const inventory = inventoryData?.data || mockInventory;
   const procurement = procurementData?.data || mockProcurement;

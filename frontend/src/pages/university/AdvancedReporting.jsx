@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ChartBarIcon,
   DocumentChartBarIcon,
   PresentationChartBarIcon,
   DocumentTextIcon,
   CalendarDaysIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   UserGroupIcon,
   BookOpenIcon,
   ClockIcon,
@@ -49,19 +49,19 @@ function AdvancedReporting() {
   const queryClient = useQueryClient();
 
   // Fetch report data based on selected report type
-  const { data: reportData, isLoading } = useQuery(
-    [
+  const { data: reportData, isLoading } = useQuery({
+    queryKey: [
       "advanced-reports",
       { type: selectedReport, range: dateRange, branch: selectedBranch },
     ],
-    () =>
+    queryFn: () =>
       fetchReportData({
         type: selectedReport,
         range: dateRange,
         branch: selectedBranch,
       }),
-    { refetchOnWindowFocus: false }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   const reports = reportData?.data || mockReportData[selectedReport] || {};
 
@@ -588,7 +588,7 @@ function AdvancedReporting() {
             {stats.overdueItems.toLocaleString()}
           </p>
           <div className="flex items-center mt-2">
-            <TrendingDownIcon className="h-4 w-4 text-red-500 mr-1" />
+            <ArrowTrendingDownIcon className="h-4 w-4 text-red-500 mr-1" />
             <span className="text-sm text-red-600">-5% from last month</span>
           </div>
         </div>

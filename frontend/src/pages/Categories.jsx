@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { libraryAPI } from "../services/api";
 import {
   TagIcon,
@@ -21,90 +21,99 @@ function Categories() {
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    color: '#22c55e',
-    icon: 'BookOpen',
-    is_active: true
+    name: "",
+    description: "",
+    color: "#22c55e",
+    icon: "BookOpen",
+    is_active: true,
   });
 
   const queryClient = useQueryClient();
 
   // Mutations for CRUD operations
-  const addCategoryMutation = useMutation(
-    (newCategory) => libraryAPI.createCategory(newCategory),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['categories']);
-        setShowAddModal(false);
-        resetForm();
-      }
-    }
-  );
+  const addCategoryMutation = useMutation({
+    mutationFn: (newCategory) => libraryAPI.createCategory(newCategory),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categories"]);
+      setShowAddModal(false);
+      resetForm();
+    },
+  });
 
-  const editCategoryMutation = useMutation(
-    ({ id, ...data }) => libraryAPI.updateCategory(id, data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['categories']);
-        setShowEditModal(false);
-        resetForm();
-      }
-    }
-  );
+  const editCategoryMutation = useMutation({
+    mutationFn: ({ id, ...data }) => libraryAPI.updateCategory(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categories"]);
+      setShowEditModal(false);
+      resetForm();
+    },
+  });
 
-  const deleteCategoryMutation = useMutation(
-    (categoryId) => libraryAPI.deleteCategory(categoryId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['categories']);
-      }
-    }
-  );
+  const deleteCategoryMutation = useMutation({
+    mutationFn: (categoryId) => libraryAPI.deleteCategory(categoryId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categories"]);
+    },
+  });
 
   // Enhanced mock data with comprehensive category information
   const categories = [
     {
       id: 1,
       name: "Computer Science & IT",
-      description: "Programming, algorithms, data structures, and computer science fundamentals",
+      description:
+        "Programming, algorithms, data structures, and computer science fundamentals",
       bookCount: 1245,
       issuedCount: 324,
       availableCount: 921,
       color: "#3b82f6",
       icon: "🖥️",
-      popularBooks: ["Data Structures and Algorithms", "Computer Networks", "Operating Systems"],
+      popularBooks: [
+        "Data Structures and Algorithms",
+        "Computer Networks",
+        "Operating Systems",
+      ],
       created_at: "2023-01-15",
       updated_at: "2023-11-20",
-      is_active: true
+      is_active: true,
     },
     {
       id: 2,
       name: "Mathematics & Statistics",
-      description: "Pure mathematics, applied mathematics, statistics, and mathematical modeling",
+      description:
+        "Pure mathematics, applied mathematics, statistics, and mathematical modeling",
       bookCount: 867,
       issuedCount: 198,
       availableCount: 669,
       color: "#10b981",
       icon: "📐",
-      popularBooks: ["Linear Algebra", "Calculus", "Probability and Statistics"],
+      popularBooks: [
+        "Linear Algebra",
+        "Calculus",
+        "Probability and Statistics",
+      ],
       created_at: "2023-01-15",
       updated_at: "2023-11-18",
-      is_active: true
+      is_active: true,
     },
     {
       id: 3,
       name: "Engineering & Technology",
-      description: "Mechanical, electrical, civil, and other engineering disciplines",
+      description:
+        "Mechanical, electrical, civil, and other engineering disciplines",
       bookCount: 1456,
       issuedCount: 456,
       availableCount: 1000,
       color: "#f59e0b",
       icon: "⚙️",
-      popularBooks: ["Engineering Mechanics", "Circuit Analysis", "Materials Science"],
+      popularBooks: [
+        "Engineering Mechanics",
+        "Circuit Analysis",
+        "Materials Science",
+      ],
       created_at: "2023-01-15",
       updated_at: "2023-11-22",
-      is_active: true
+      is_active: true,
     },
     {
       id: 4,
@@ -118,12 +127,13 @@ function Categories() {
       popularBooks: ["General Physics", "Organic Chemistry", "Cell Biology"],
       created_at: "2023-01-15",
       updated_at: "2023-11-19",
-      is_active: true
+      is_active: true,
     },
     {
       id: 5,
       name: "Literature & Languages",
-      description: "English literature, regional languages, and linguistic studies",
+      description:
+        "English literature, regional languages, and linguistic studies",
       bookCount: 734,
       issuedCount: 189,
       availableCount: 545,
@@ -132,26 +142,32 @@ function Categories() {
       popularBooks: ["English Literature", "Tamil Literature", "Linguistics"],
       created_at: "2023-01-15",
       updated_at: "2023-11-17",
-      is_active: true
+      is_active: true,
     },
     {
       id: 6,
       name: "Business & Management",
-      description: "Business administration, management principles, and entrepreneurship",
+      description:
+        "Business administration, management principles, and entrepreneurship",
       bookCount: 456,
       issuedCount: 123,
       availableCount: 333,
       color: "#06b6d4",
       icon: "💼",
-      popularBooks: ["Principles of Management", "Marketing Management", "Financial Management"],
+      popularBooks: [
+        "Principles of Management",
+        "Marketing Management",
+        "Financial Management",
+      ],
       created_at: "2023-02-01",
       updated_at: "2023-11-21",
-      is_active: true
+      is_active: true,
     },
     {
       id: 7,
       name: "General Knowledge",
-      description: "General awareness, current affairs, and competitive exam preparation",
+      description:
+        "General awareness, current affairs, and competitive exam preparation",
       bookCount: 345,
       issuedCount: 98,
       availableCount: 247,
@@ -160,7 +176,7 @@ function Categories() {
       popularBooks: ["General Knowledge", "Current Affairs", "Reasoning"],
       created_at: "2023-02-15",
       updated_at: "2023-11-16",
-      is_active: true
+      is_active: true,
     },
     {
       id: 8,
@@ -174,8 +190,8 @@ function Categories() {
       popularBooks: ["ML Projects", "IoT Projects", "Web Development Projects"],
       created_at: "2023-03-01",
       updated_at: "2023-11-23",
-      is_active: true
-    }
+      is_active: true,
+    },
   ];
 
   const filteredCategories = categories.filter(
@@ -197,7 +213,7 @@ function Categories() {
       description: category.description,
       color: category.color,
       icon: category.icon,
-      is_active: category.is_active
+      is_active: category.is_active,
     });
     setShowEditModal(true);
   };
@@ -206,7 +222,7 @@ function Categories() {
     e.preventDefault();
     editCategoryMutation.mutate({
       id: selectedCategory.id,
-      ...formData
+      ...formData,
     });
   };
 
@@ -216,46 +232,53 @@ function Categories() {
   };
 
   const handleDeleteCategory = (categoryId) => {
-    const category = categories.find(c => c.id === categoryId);
+    const category = categories.find((c) => c.id === categoryId);
     if (category?.bookCount > 0) {
-      alert(`Cannot delete category "${category.name}" because it contains ${category.bookCount} books. Please move or delete the books first.`);
+      alert(
+        `Cannot delete category "${category.name}" because it contains ${category.bookCount} books. Please move or delete the books first.`
+      );
       return;
     }
-    
-    if (window.confirm('Are you sure you want to delete this category?')) {
+
+    if (window.confirm("Are you sure you want to delete this category?")) {
       deleteCategoryMutation.mutate(categoryId);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: type === 'checkbox' ? checked : value 
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const resetForm = () => {
     setFormData({
-      name: '',
-      description: '',
-      color: '#22c55e',
-      icon: 'BookOpen',
-      is_active: true
+      name: "",
+      description: "",
+      color: "#22c55e",
+      icon: "BookOpen",
+      is_active: true,
     });
     setSelectedCategory(null);
   };
 
   const totalBooks = categories.reduce((sum, cat) => sum + cat.bookCount, 0);
   const totalIssued = categories.reduce((sum, cat) => sum + cat.issuedCount, 0);
-  const totalAvailable = categories.reduce((sum, cat) => sum + cat.availableCount, 0);
+  const totalAvailable = categories.reduce(
+    (sum, cat) => sum + cat.availableCount,
+    0
+  );
 
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div className="page-header">
         <h1 className="page-title">🏷️ Categories Management</h1>
-        <p className="page-subtitle">Organize books into categories and manage library collections</p>
+        <p className="page-subtitle">
+          Organize books into categories and manage library collections
+        </p>
       </div>
 
       {/* Action Bar */}
@@ -275,7 +298,7 @@ function Categories() {
         </div>
 
         {/* Add Category Button */}
-        <button 
+        <button
           onClick={() => setShowAddModal(true)}
           className="btn-primary inline-flex items-center"
         >
@@ -320,15 +343,15 @@ function Categories() {
             className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden"
           >
             {/* Category Header */}
-            <div 
+            <div
               className="h-2"
               style={{ backgroundColor: category.color }}
             ></div>
-            
+
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center">
-                  <div 
+                  <div
                     className="rounded-lg p-3 mr-3 text-2xl"
                     style={{ backgroundColor: `${category.color}20` }}
                   >
@@ -344,21 +367,21 @@ function Categories() {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <button 
+                  <button
                     onClick={() => handleViewCategory(category)}
                     className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
                     title="View Details"
                   >
                     <EyeIcon className="w-4 h-4" />
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEditCategory(category)}
                     className="text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50 p-1 rounded"
                     title="Edit Category"
                   >
                     <PencilIcon className="w-4 h-4" />
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleDeleteCategory(category.id)}
                     className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
                     title="Delete Category"
@@ -367,7 +390,7 @@ function Categories() {
                   </button>
                 </div>
               </div>
-              
+
               <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                 {category.description}
               </p>
@@ -392,14 +415,21 @@ function Categories() {
               <div className="mb-4">
                 <div className="flex justify-between text-xs text-gray-600 mb-1">
                   <span>Utilization</span>
-                  <span>{Math.round((category.issuedCount / category.bookCount) * 100)}%</span>
+                  <span>
+                    {Math.round(
+                      (category.issuedCount / category.bookCount) * 100
+                    )}
+                    %
+                  </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
+                  <div
                     className="h-2 rounded-full transition-all duration-300"
-                    style={{ 
-                      width: `${(category.issuedCount / category.bookCount) * 100}%`,
-                      backgroundColor: category.color
+                    style={{
+                      width: `${
+                        (category.issuedCount / category.bookCount) * 100
+                      }%`,
+                      backgroundColor: category.color,
                     }}
                   ></div>
                 </div>
@@ -407,10 +437,15 @@ function Categories() {
 
               {/* Popular Books */}
               <div>
-                <h4 className="text-xs font-medium text-gray-700 mb-2">Popular Books:</h4>
+                <h4 className="text-xs font-medium text-gray-700 mb-2">
+                  Popular Books:
+                </h4>
                 <div className="space-y-1">
                   {category.popularBooks.slice(0, 2).map((book, index) => (
-                    <div key={index} className="text-xs text-gray-600 flex items-center">
+                    <div
+                      key={index}
+                      className="text-xs text-gray-600 flex items-center"
+                    >
                       <BookOpenIcon className="w-3 h-3 mr-1 text-gray-400" />
                       {book}
                     </div>
@@ -466,7 +501,7 @@ function Categories() {
                 <XMarkIcon className="w-6 h-6" />
               </button>
             </div>
-            
+
             <form onSubmit={handleAddCategory} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -510,7 +545,9 @@ function Categories() {
                     onChange={handleInputChange}
                     className="w-12 h-10 border border-gray-300 rounded-lg cursor-pointer"
                   />
-                  <span className="text-sm text-gray-600">{formData.color}</span>
+                  <span className="text-sm text-gray-600">
+                    {formData.color}
+                  </span>
                 </div>
               </div>
 
@@ -538,7 +575,10 @@ function Categories() {
                   onChange={handleInputChange}
                   className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
-                <label htmlFor="is_active" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="is_active"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   Active category
                 </label>
               </div>
@@ -582,7 +622,7 @@ function Categories() {
                 <XMarkIcon className="w-6 h-6" />
               </button>
             </div>
-            
+
             <form onSubmit={handleUpdateCategory} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -624,7 +664,9 @@ function Categories() {
                     onChange={handleInputChange}
                     className="w-12 h-10 border border-gray-300 rounded-lg cursor-pointer"
                   />
-                  <span className="text-sm text-gray-600">{formData.color}</span>
+                  <span className="text-sm text-gray-600">
+                    {formData.color}
+                  </span>
                 </div>
               </div>
 
@@ -651,7 +693,10 @@ function Categories() {
                   onChange={handleInputChange}
                   className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
-                <label htmlFor="edit_is_active" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="edit_is_active"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   Active category
                 </label>
               </div>
@@ -692,23 +737,29 @@ function Categories() {
                 <XMarkIcon className="w-6 h-6" />
               </button>
             </div>
-            
+
             <div className="p-6">
               <div className="flex items-center mb-6">
-                <div 
+                <div
                   className="rounded-lg p-4 mr-4 text-3xl"
                   style={{ backgroundColor: `${selectedCategory.color}20` }}
                 >
                   {selectedCategory.icon}
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">{selectedCategory.name}</h3>
-                  <p className="text-gray-600">{selectedCategory.description}</p>
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full mt-1 ${
-                    selectedCategory.is_active
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}>
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {selectedCategory.name}
+                  </h3>
+                  <p className="text-gray-600">
+                    {selectedCategory.description}
+                  </p>
+                  <span
+                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full mt-1 ${
+                      selectedCategory.is_active
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
                     {selectedCategory.is_active ? "Active" : "Inactive"}
                   </span>
                 </div>
@@ -716,24 +767,35 @@ function Categories() {
 
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="bg-blue-50 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-blue-600">{selectedCategory.bookCount}</div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {selectedCategory.bookCount}
+                  </div>
                   <div className="text-sm text-blue-700">Total Books</div>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-green-600">{selectedCategory.availableCount}</div>
+                  <div className="text-2xl font-bold text-green-600">
+                    {selectedCategory.availableCount}
+                  </div>
                   <div className="text-sm text-green-700">Available</div>
                 </div>
                 <div className="bg-orange-50 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-orange-600">{selectedCategory.issuedCount}</div>
+                  <div className="text-2xl font-bold text-orange-600">
+                    {selectedCategory.issuedCount}
+                  </div>
                   <div className="text-sm text-orange-700">Issued</div>
                 </div>
               </div>
 
               <div className="mb-6">
-                <h4 className="font-medium text-gray-900 mb-3">Popular Books in this Category:</h4>
+                <h4 className="font-medium text-gray-900 mb-3">
+                  Popular Books in this Category:
+                </h4>
                 <div className="space-y-2">
                   {selectedCategory.popularBooks.map((book, index) => (
-                    <div key={index} className="flex items-center p-2 bg-gray-50 rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center p-2 bg-gray-50 rounded-lg"
+                    >
                       <BookOpenIcon className="w-4 h-4 mr-2 text-gray-400" />
                       <span className="text-sm text-gray-700">{book}</span>
                     </div>
@@ -742,25 +804,44 @@ function Categories() {
               </div>
 
               <div className="mb-6">
-                <h4 className="font-medium text-gray-900 mb-2">Utilization Rate:</h4>
+                <h4 className="font-medium text-gray-900 mb-2">
+                  Utilization Rate:
+                </h4>
                 <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
-                  <div 
+                  <div
                     className="h-4 rounded-full transition-all duration-300"
-                    style={{ 
-                      width: `${(selectedCategory.issuedCount / selectedCategory.bookCount) * 100}%`,
-                      backgroundColor: selectedCategory.color
+                    style={{
+                      width: `${
+                        (selectedCategory.issuedCount /
+                          selectedCategory.bookCount) *
+                        100
+                      }%`,
+                      backgroundColor: selectedCategory.color,
                     }}
                   ></div>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600">
-                  <span>{Math.round((selectedCategory.issuedCount / selectedCategory.bookCount) * 100)}% utilized</span>
+                  <span>
+                    {Math.round(
+                      (selectedCategory.issuedCount /
+                        selectedCategory.bookCount) *
+                        100
+                    )}
+                    % utilized
+                  </span>
                   <span>{selectedCategory.availableCount} available</span>
                 </div>
               </div>
 
               <div className="text-sm text-gray-500 space-y-1">
-                <div>Created: {new Date(selectedCategory.created_at).toLocaleDateString()}</div>
-                <div>Last Updated: {new Date(selectedCategory.updated_at).toLocaleDateString()}</div>
+                <div>
+                  Created:{" "}
+                  {new Date(selectedCategory.created_at).toLocaleDateString()}
+                </div>
+                <div>
+                  Last Updated:{" "}
+                  {new Date(selectedCategory.updated_at).toLocaleDateString()}
+                </div>
               </div>
 
               <div className="flex justify-end space-x-3 pt-6 border-t">

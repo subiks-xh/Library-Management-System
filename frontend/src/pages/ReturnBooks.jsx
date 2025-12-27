@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { libraryAPI } from "../services/api";
 import {
   ArrowLeftOnRectangleIcon,
@@ -20,29 +20,27 @@ function ReturnBooks() {
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [returnData, setReturnData] = useState({
-    return_date: new Date().toISOString().split('T')[0],
-    book_condition: 'good',
+    return_date: new Date().toISOString().split("T")[0],
+    book_condition: "good",
     fine_paid: false,
-    notes: ''
+    notes: "",
   });
   const [scanning, setScanning] = useState(false);
 
   const queryClient = useQueryClient();
 
   // Mutation for returning books
-  const returnBookMutation = useMutation(
-    (data) => libraryAPI.returnBook(data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['currentIssues']);
-        queryClient.invalidateQueries(['books']);
-        queryClient.invalidateQueries(['students']);
-        setShowReturnModal(false);
-        setSelectedIssue(null);
-        resetReturnData();
-      }
-    }
-  );
+  const returnBookMutation = useMutation({
+    mutationFn: (data) => libraryAPI.returnBook(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["currentIssues"]);
+      queryClient.invalidateQueries(["books"]);
+      queryClient.invalidateQueries(["students"]);
+      setShowReturnModal(false);
+      setSelectedIssue(null);
+      resetReturnData();
+    },
+  });
 
   // Mock data for current issues with comprehensive information
   const currentIssues = [
@@ -54,13 +52,15 @@ function ReturnBooks() {
       year: 4,
       email: "arjun.k@college.edu.in",
       phone: "9876543210",
-      photo_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      photo_url:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       bookTitle: "Advanced Web Development with React",
       bookAuthor: "John Doe",
       accessionNumber: "IT001",
       isbn: "978-1234567890",
       category: "Information Technology",
-      cover_image: "https://images.unsplash.com/photo-1562813733-b31f71025d54?w=200&h=300&fit=crop",
+      cover_image:
+        "https://images.unsplash.com/photo-1562813733-b31f71025d54?w=200&h=300&fit=crop",
       issueDate: "2024-12-10",
       dueDate: "2024-12-24",
       daysOverdue: 1,
@@ -69,7 +69,7 @@ function ReturnBooks() {
       status: "overdue",
       location: "Section B, Shelf 3",
       renewals: 1,
-      maxRenewals: 2
+      maxRenewals: 2,
     },
     {
       id: 2,
@@ -79,13 +79,15 @@ function ReturnBooks() {
       year: 3,
       email: "priya.l@college.edu.in",
       phone: "9876543211",
-      photo_url: "https://images.unsplash.com/photo-1494790108755-2616b612b829?w=150&h=150&fit=crop&crop=face",
+      photo_url:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b829?w=150&h=150&fit=crop&crop=face",
       bookTitle: "Database Management Systems",
       bookAuthor: "Raghu Ramakrishnan",
       accessionNumber: "CS002",
       isbn: "978-0987654321",
       category: "Computer Science",
-      cover_image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=300&fit=crop",
+      cover_image:
+        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=300&fit=crop",
       issueDate: "2024-12-15",
       dueDate: "2024-12-29",
       daysOverdue: 0,
@@ -94,7 +96,7 @@ function ReturnBooks() {
       status: "active",
       location: "Section A, Shelf 1",
       renewals: 0,
-      maxRenewals: 2
+      maxRenewals: 2,
     },
     {
       id: 3,
@@ -104,13 +106,15 @@ function ReturnBooks() {
       year: 2,
       email: "rajesh.k@college.edu.in",
       phone: "9876543212",
-      photo_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      photo_url:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       bookTitle: "Digital Signal Processing Fundamentals",
       bookAuthor: "Alan V. Oppenheim",
       accessionNumber: "EC001",
       isbn: "978-1122334455",
       category: "Electronics",
-      cover_image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=300&fit=crop",
+      cover_image:
+        "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=300&fit=crop",
       issueDate: "2024-12-05",
       dueDate: "2024-12-19",
       daysOverdue: 6,
@@ -119,7 +123,7 @@ function ReturnBooks() {
       status: "overdue",
       location: "Section D, Shelf 1",
       renewals: 2,
-      maxRenewals: 2
+      maxRenewals: 2,
     },
     {
       id: 4,
@@ -129,13 +133,15 @@ function ReturnBooks() {
       year: 1,
       email: "kavitha.d@college.edu.in",
       phone: "9876543213",
-      photo_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      photo_url:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
       bookTitle: "Engineering Mechanics - Statics",
       bookAuthor: "R.S. Khurmi",
       accessionNumber: "ME001",
       isbn: "978-5566778899",
       category: "Mechanical Engineering",
-      cover_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=300&fit=crop",
+      cover_image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=300&fit=crop",
       issueDate: "2024-12-20",
       dueDate: "2025-01-03",
       daysOverdue: 0,
@@ -144,16 +150,17 @@ function ReturnBooks() {
       status: "active",
       location: "Section C, Shelf 2",
       renewals: 0,
-      maxRenewals: 2
-    }
+      maxRenewals: 2,
+    },
   ];
 
   // Filter issues based on search
-  const filteredIssues = currentIssues.filter(issue =>
-    issue.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    issue.registerNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    issue.bookTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    issue.accessionNumber.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredIssues = currentIssues.filter(
+    (issue) =>
+      issue.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.registerNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.bookTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.accessionNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Calculate overdue days and fine
@@ -168,25 +175,25 @@ function ReturnBooks() {
   const handleReturn = (issue) => {
     setSelectedIssue(issue);
     setReturnData({
-      return_date: new Date().toISOString().split('T')[0],
-      book_condition: 'good',
+      return_date: new Date().toISOString().split("T")[0],
+      book_condition: "good",
       fine_paid: issue.fineAmount > 0 ? false : true,
-      notes: ''
+      notes: "",
     });
     setShowReturnModal(true);
   };
 
   const handleReturnSubmit = (e) => {
     e.preventDefault();
-    
+
     if (selectedIssue.fineAmount > 0 && !returnData.fine_paid) {
-      alert('Please collect the fine amount before processing the return.');
+      alert("Please collect the fine amount before processing the return.");
       return;
     }
 
     const data = {
       issue_id: selectedIssue.id,
-      ...returnData
+      ...returnData,
     };
 
     returnBookMutation.mutate(data);
@@ -194,18 +201,18 @@ function ReturnBooks() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setReturnData(prev => ({
+    setReturnData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const resetReturnData = () => {
     setReturnData({
-      return_date: new Date().toISOString().split('T')[0],
-      book_condition: 'good',
+      return_date: new Date().toISOString().split("T")[0],
+      book_condition: "good",
       fine_paid: false,
-      notes: ''
+      notes: "",
     });
   };
 
@@ -213,7 +220,8 @@ function ReturnBooks() {
   const simulateBarcodeScan = () => {
     setScanning(true);
     setTimeout(() => {
-      const randomIssue = currentIssues[Math.floor(Math.random() * currentIssues.length)];
+      const randomIssue =
+        currentIssues[Math.floor(Math.random() * currentIssues.length)];
       handleReturn(randomIssue);
       setScanning(false);
     }, 2000);
@@ -221,9 +229,16 @@ function ReturnBooks() {
 
   // Stats calculations
   const totalIssued = currentIssues.length;
-  const overdueCount = currentIssues.filter(issue => issue.status === 'overdue').length;
-  const totalFines = currentIssues.reduce((sum, issue) => sum + issue.fineAmount, 0);
-  const activeReturns = currentIssues.filter(issue => issue.status === 'active').length;
+  const overdueCount = currentIssues.filter(
+    (issue) => issue.status === "overdue"
+  ).length;
+  const totalFines = currentIssues.reduce(
+    (sum, issue) => sum + issue.fineAmount,
+    0
+  );
+  const activeReturns = currentIssues.filter(
+    (issue) => issue.status === "active"
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -278,7 +293,9 @@ function ReturnBooks() {
           <div className="text-sm text-gray-600">Total Issued</div>
         </div>
         <div className="stats-card text-center">
-          <div className="text-2xl font-bold text-green-600">{activeReturns}</div>
+          <div className="text-2xl font-bold text-green-600">
+            {activeReturns}
+          </div>
           <div className="text-sm text-gray-600">Active Returns</div>
         </div>
         <div className="stats-card text-center">
@@ -286,7 +303,9 @@ function ReturnBooks() {
           <div className="text-sm text-gray-600">Overdue Books</div>
         </div>
         <div className="stats-card text-center">
-          <div className="text-2xl font-bold text-orange-600">₹{totalFines.toFixed(2)}</div>
+          <div className="text-2xl font-bold text-orange-600">
+            ₹{totalFines.toFixed(2)}
+          </div>
           <div className="text-sm text-gray-600">Pending Fines</div>
         </div>
       </div>
@@ -297,7 +316,7 @@ function ReturnBooks() {
           <ArrowLeftOnRectangleIcon className="w-5 h-5 text-primary-600 mr-2" />
           <h2 className="text-lg font-semibold">Current Issues</h2>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -369,29 +388,38 @@ function ReturnBooks() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {new Date(issue.issueDate).toLocaleDateString('en-IN')}
+                    {new Date(issue.issueDate).toLocaleDateString("en-IN")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div className={issue.status === 'overdue' ? 'text-red-600 font-medium' : ''}>
-                      {new Date(issue.dueDate).toLocaleDateString('en-IN')}
+                    <div
+                      className={
+                        issue.status === "overdue"
+                          ? "text-red-600 font-medium"
+                          : ""
+                      }
+                    >
+                      {new Date(issue.dueDate).toLocaleDateString("en-IN")}
                     </div>
-                    {issue.status === 'overdue' && (
+                    {issue.status === "overdue" && (
                       <div className="text-xs text-red-500">
                         {issue.daysOverdue} days overdue
                       </div>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      issue.status === 'overdue'
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-green-100 text-green-800'
-                    }`}>
-                      {issue.status === 'overdue' ? 'Overdue' : 'Active'}
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        issue.status === "overdue"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-green-100 text-green-800"
+                      }`}
+                    >
+                      {issue.status === "overdue" ? "Overdue" : "Active"}
                     </span>
                     {issue.renewals > 0 && (
                       <div className="text-xs text-gray-500 mt-1">
-                        Renewed {issue.renewals} time{issue.renewals > 1 ? 's' : ''}
+                        Renewed {issue.renewals} time
+                        {issue.renewals > 1 ? "s" : ""}
                       </div>
                     )}
                   </td>
@@ -462,9 +490,15 @@ function ReturnBooks() {
                     className="w-16 h-20 object-cover rounded"
                   />
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">{selectedIssue.bookTitle}</h4>
-                    <p className="text-gray-600">by {selectedIssue.bookAuthor}</p>
-                    <p className="text-sm text-gray-500">Accession: {selectedIssue.accessionNumber}</p>
+                    <h4 className="font-semibold text-gray-900">
+                      {selectedIssue.bookTitle}
+                    </h4>
+                    <p className="text-gray-600">
+                      by {selectedIssue.bookAuthor}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Accession: {selectedIssue.accessionNumber}
+                    </p>
                   </div>
                   <div className="text-right">
                     <div className="flex items-center mb-2">
@@ -474,8 +508,12 @@ function ReturnBooks() {
                         className="w-8 h-8 rounded-full object-cover mr-2"
                       />
                       <div>
-                        <div className="font-medium text-gray-900">{selectedIssue.studentName}</div>
-                        <div className="text-sm text-gray-500">{selectedIssue.registerNumber}</div>
+                        <div className="font-medium text-gray-900">
+                          {selectedIssue.studentName}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {selectedIssue.registerNumber}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -484,18 +522,36 @@ function ReturnBooks() {
                 <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t">
                   <div>
                     <div className="text-xs text-gray-500">Issue Date</div>
-                    <div className="font-medium">{new Date(selectedIssue.issueDate).toLocaleDateString('en-IN')}</div>
+                    <div className="font-medium">
+                      {new Date(selectedIssue.issueDate).toLocaleDateString(
+                        "en-IN"
+                      )}
+                    </div>
                   </div>
                   <div>
                     <div className="text-xs text-gray-500">Due Date</div>
-                    <div className={`font-medium ${selectedIssue.status === 'overdue' ? 'text-red-600' : ''}`}>
-                      {new Date(selectedIssue.dueDate).toLocaleDateString('en-IN')}
+                    <div
+                      className={`font-medium ${
+                        selectedIssue.status === "overdue" ? "text-red-600" : ""
+                      }`}
+                    >
+                      {new Date(selectedIssue.dueDate).toLocaleDateString(
+                        "en-IN"
+                      )}
                     </div>
                   </div>
                   <div>
                     <div className="text-xs text-gray-500">Days Overdue</div>
-                    <div className={`font-medium ${selectedIssue.daysOverdue > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                      {selectedIssue.daysOverdue > 0 ? selectedIssue.daysOverdue : 0}
+                    <div
+                      className={`font-medium ${
+                        selectedIssue.daysOverdue > 0
+                          ? "text-red-600"
+                          : "text-green-600"
+                      }`}
+                    >
+                      {selectedIssue.daysOverdue > 0
+                        ? selectedIssue.daysOverdue
+                        : 0}
                     </div>
                   </div>
                 </div>
@@ -509,7 +565,8 @@ function ReturnBooks() {
                       </span>
                     </div>
                     <div className="text-sm text-red-600 mt-1">
-                      {selectedIssue.daysOverdue} days × ₹{selectedIssue.finePerDay} per day
+                      {selectedIssue.daysOverdue} days × ₹
+                      {selectedIssue.finePerDay} per day
                     </div>
                   </div>
                 )}
@@ -527,7 +584,7 @@ function ReturnBooks() {
                       name="return_date"
                       value={returnData.return_date}
                       onChange={handleInputChange}
-                      max={new Date().toISOString().split('T')[0]}
+                      max={new Date().toISOString().split("T")[0]}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
@@ -564,7 +621,8 @@ function ReturnBooks() {
                         className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                       />
                       <span className="ml-2 text-sm text-gray-700">
-                        Fine of ₹{selectedIssue.fineAmount.toFixed(2)} has been collected
+                        Fine of ₹{selectedIssue.fineAmount.toFixed(2)} has been
+                        collected
                       </span>
                     </label>
                   </div>
@@ -602,7 +660,10 @@ function ReturnBooks() {
                   </button>
                   <button
                     type="submit"
-                    disabled={returnBookMutation.isLoading || (selectedIssue.fineAmount > 0 && !returnData.fine_paid)}
+                    disabled={
+                      returnBookMutation.isLoading ||
+                      (selectedIssue.fineAmount > 0 && !returnData.fine_paid)
+                    }
                     className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors inline-flex items-center"
                   >
                     {returnBookMutation.isLoading ? (

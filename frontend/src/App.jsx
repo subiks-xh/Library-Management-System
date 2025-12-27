@@ -4,11 +4,17 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import Books from "./pages/Books";
+import DigitalLibrary from "./pages/DigitalLibrary";
 import Categories from "./pages/Categories";
 import Students from "./pages/Students";
 import IssueBooks from "./pages/IssueBooks";
 import ReturnBooks from "./pages/ReturnBooks";
+import Reservations from "./pages/Reservations";
+import AIFeatures from "./pages/AIFeatures";
+import QRCodeGenerator from "./pages/QRCodeGenerator";
+import NotificationCenter from "./pages/NotificationCenter";
 import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 
 function App() {
@@ -30,11 +36,17 @@ function App() {
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/books" element={<Books />} />
+              <Route path="/digital-library" element={<DigitalLibrary />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/students" element={<Students />} />
               <Route path="/issue" element={<IssueBooks />} />
               <Route path="/return" element={<ReturnBooks />} />
+              <Route path="/reservations" element={<Reservations />} />
+              <Route path="/ai-features" element={<AIFeatures />} />
+              <Route path="/qr-generator" element={<QRCodeGenerator />} />
+              <Route path="/notifications" element={<NotificationCenter />} />
               <Route path="/reports" element={<Reports />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

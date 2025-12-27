@@ -10,17 +10,29 @@ import {
   DocumentChartBarIcon,
   XMarkIcon,
   BuildingLibraryIcon,
+  BookmarkIcon,
+  QrCodeIcon,
+  BellIcon,
+  CloudIcon,
+  SparklesIcon,
+  CogIcon,
 } from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
   { name: "Books", href: "/books", icon: BookOpenIcon },
+  { name: "Digital Library", href: "/digital-library", icon: CloudIcon },
   { name: "Categories", href: "/categories", icon: TagIcon },
   { name: "Students", href: "/students", icon: UserGroupIcon },
   { name: "Issue Books", href: "/issue", icon: ArrowRightOnRectangleIcon },
   { name: "Return Books", href: "/return", icon: ArrowLeftOnRectangleIcon },
+  { name: "Reservations", href: "/reservations", icon: BookmarkIcon },
+  { name: "AI Features", href: "/ai-features", icon: SparklesIcon },
+  { name: "QR Codes", href: "/qr-generator", icon: QrCodeIcon },
+  { name: "Notifications", href: "/notifications", icon: BellIcon },
   { name: "Reports", href: "/reports", icon: DocumentChartBarIcon },
+  { name: "Settings", href: "/settings", icon: CogIcon },
 ];
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {

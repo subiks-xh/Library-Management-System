@@ -104,7 +104,7 @@ router.get(
       FROM books b
       LEFT JOIN categories c ON b.category_id = c.id
       ${whereClause}
-      ORDER BY b.accession_number
+      ORDER BY b.id
       LIMIT ? OFFSET ?
     `;
 
