@@ -7,13 +7,17 @@ require("dotenv").config();
 
 // Import routes
 const authRoutes = require("./routes/auth");
+const cardAuthRoutes = require("./routes/card_auth");
 const dashboardRoutes = require("./routes/dashboard");
+const realTimeDashboardRoutes = require("./routes/real-time-dashboard");
 const bookRoutes = require("./routes/books");
 const categoryRoutes = require("./routes/categories");
 const studentRoutes = require("./routes/students");
 const issueRoutes = require("./routes/issues");
 const fineRoutes = require("./routes/fines");
 const reportRoutes = require("./routes/reports");
+const bookingsRoutes = require("./routes/bookings");
+const questionPapersRoutes = require("./routes/question-papers");
 
 // Import middleware
 const errorHandler = require("./middleware/errorHandler");
@@ -64,13 +68,17 @@ app.get("/health", (req, res) => {
 
 // API Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/card-auth", cardAuthRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/real-time", realTimeDashboardRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/fines", fineRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/bookings", bookingsRoutes);
+app.use("/api/question-papers", questionPapersRoutes);
 
 // 404 handler
 app.use("*", (req, res) => {
