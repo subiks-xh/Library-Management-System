@@ -1,0 +1,126 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#2c3e50">
+    Student Empathy Map - Tamil Nadu College Library System
+  </text>
+  
+  <!-- Center circle with user -->
+  <circle cx="600" cy="400" r="120" fill="#22c55e" opacity="0.1"/>
+  <circle cx="600" cy="400" r="80" fill="#22c55e" opacity="0.3"/>
+  
+  <!-- User icon -->
+  <circle cx="600" cy="380" r="25" fill="#22c55e"/>
+  <ellipse cx="600" cy="420" rx="35" ry="20" fill="#22c55e"/>
+  
+  <text x="600" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2c3e50">
+    Engineering Student
+  </text>
+  <text x="600" y="490" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+    Primary User
+  </text>
+  
+  <!-- Quadrant 1: THINK & FEEL (Top Left) -->
+  <rect x="50" y="80" width="480" height="280" fill="#3b82f6" opacity="0.1" rx="15"/>
+  <text x="290" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#3b82f6">
+    THINK &amp; FEEL
+  </text>
+  
+  <!-- Think & Feel content -->
+  <text x="70" y="140" font-family="Arial, sans-serif" font-size="14" fill="#374151">
+    <tspan x="70" dy="0">💭 "Finding previous question papers is so difficult"</tspan>
+    <tspan x="70" dy="20">😟 Anxious about long queues for book transactions</tspan>
+    <tspan x="70" dy="20">🤔 "Wish I could book computers in advance"</tspan>
+    <tspan x="70" dy="20">😤 Frustrated with long queues for book issues</tspan>
+    <tspan x="70" dy="20">📱 "Everything should be digital like other apps"</tspan>
+    <tspan x="70" dy="20">⏰ Time pressure during exam preparations</tspan>
+    <tspan x="70" dy="20">🎯 Wants instant access to previous papers</tspan>
+    <tspan x="70" dy="20">🔒 Concerned about losing library card</tspan>
+    <tspan x="70" dy="20">💡 "Google login would be so much easier"</tspan>
+    <tspan x="70" dy="20">🏆 Proud of their engineering department</tspan>
+  </text>
+  
+  <!-- Quadrant 2: SEE (Top Right) -->
+  <rect x="670" y="80" width="480" height="280" fill="#f59e0b" opacity="0.1" rx="15"/>
+  <text x="910" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#f59e0b">
+    SEE
+  </text>
+  
+  <!-- See content -->
+  <text x="690" y="140" font-family="Arial, sans-serif" font-size="14" fill="#374151">
+    <tspan x="690" dy="0">👥 Long queues at librarian desk</tspan>
+    <tspan x="690" dy="20">📋 Manual register books for entry/exit</tspan>
+    <tspan x="690" dy="20">🗃️ Physical files containing question papers</tspan>
+    <tspan x="690" dy="20">💻 Limited computer systems always busy</tspan>
+    <tspan x="690" dy="20">📚 Difficulty locating specific department books</tspan>
+    <tspan x="690" dy="20">🗃️ Physical files of previous question papers</tspan>
+    <tspan x="690" dy="20">⏰ No real-time information on availability</tspan>
+    <tspan x="690" dy="20">📄 Paper-based booking systems</tspan>
+    <tspan x="690" dy="20">🚫 No AC in general study areas</tspan>
+    <tspan x="690" dy="20">📱 Friends using modern library apps in other colleges</tspan>
+  </text>
+  
+  <!-- Quadrant 3: SAY & DO (Bottom Left) -->
+  <rect x="50" y="440" width="480" height="280" fill="#8b5cf6" opacity="0.1" rx="15"/>
+  <text x="290" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#8b5cf6">
+    SAY &amp; DO
+  </text>
+  
+  <!-- Say & Do content -->
+  <text x="70" y="500" font-family="Arial, sans-serif" font-size="14" fill="#374151">
+    <tspan x="70" dy="0">💬 "Can we access question papers digitally?"</tspan>
+    <tspan x="70" dy="20">🔍 Searches through physical question paper files</tspan>
+    <tspan x="70" dy="20">📱 Takes photos of question papers for sharing</tspan>
+    <tspan x="70" dy="20">🗣️ Complains about outdated library system</tspan>
+    <tspan x="70" dy="20">⏳ Waits in queues for book transactions</tspan>
+    <tspan x="70" dy="20">🔍 Searches physically for department-specific books</tspan>
+    <tspan x="70" dy="20">📝 Manually writes name in entry registers</tspan>
+    <tspan x="70" dy="20">🤝 Asks seniors for previous year question papers</tspan>
+    <tspan x="70" dy="20">📞 Calls friends to check library occupancy</tspan>
+    <tspan x="70" dy="20">💳 Frequently forgets to carry library card</tspan>
+  </text>
+  
+  <!-- Quadrant 4: PAIN & GAIN (Bottom Right) -->
+  <rect x="670" y="440" width="480" height="280" fill="#ef4444" opacity="0.1" rx="15"/>
+  <text x="910" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ef4444">
+    PAINS &amp; GAINS
+  </text>
+  
+  <!-- Pain points -->
+  <text x="690" y="500" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#dc2626">PAINS:</text>
+  <text x="690" y="520" font-family="Arial, sans-serif" font-size="13" fill="#374151">
+    <tspan x="690" dy="0">😣 Wasted time in queues and searching</tspan>
+    <tspan x="690" dy="18">� Difficulty accessing digital question papers</tspan>
+    <tspan x="690" dy="18">🔄 Repetitive manual processes</tspan>
+    <tspan x="690" dy="18">📋 Lost opportunities due to system inefficiency</tspan>
+    <tspan x="690" dy="18">🗂️ Difficulty accessing previous question papers</tspan>
+  </text>
+  
+  <!-- Gains -->
+  <text x="690" y="620" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#16a34a">GAINS:</text>
+  <text x="690" y="640" font-family="Arial, sans-serif" font-size="13" fill="#374151">
+    <tspan x="690" dy="0">⚡ Quick digital access to all services</tspan>
+    <tspan x="690" dy="18">📱 Modern tech experience matching other apps</tspan>
+    <tspan x="690" dy="18">🎯 Efficient study time management</tspan>
+    <tspan x="690" dy="18">🏆 Better academic performance preparation</tspan>
+    <tspan x="690" dy="18">🚀 Pride in having advanced college facilities</tspan>
+  </text>
+  
+  <!-- Connecting lines from center -->
+  <line x1="520" y1="320" x2="290" y2="250" stroke="#22c55e" stroke-width="3" opacity="0.6"/>
+  <line x1="680" y1="320" x2="910" y2="250" stroke="#22c55e" stroke-width="3" opacity="0.6"/>
+  <line x1="520" y1="480" x2="290" y2="550" stroke="#22c55e" stroke-width="3" opacity="0.6"/>
+  <line x1="680" y1="480" x2="910" y2="550" stroke="#22c55e" stroke-width="3" opacity="0.6"/>
+  
+  <!-- Department labels -->
+  <text x="70" y="770" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">
+    Departments: MECH | CIVIL | CSE | IT | ECE | EEE | SH
+  </text>
+  
+  <!-- Project branding -->
+  <text x="1130" y="770" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#22c55e">
+    Enhanced Library Management System
+  </text>
+</svg>
