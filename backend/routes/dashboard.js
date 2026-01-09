@@ -10,6 +10,8 @@ const logger = require("../utils/logger");
  */
 router.get("/stats", async (req, res) => {
   try {
+    console.log("📊 Dashboard stats request received");
+
     // Get all dashboard statistics in parallel
     const [
       totalBooksResult,
@@ -20,35 +22,64 @@ router.get("/stats", async (req, res) => {
       recentActivitiesResult,
     ] = await Promise.all([
       // Total books count
-      pool.execute(
-        "SELECT COUNT(*) as count, SUM(total_copies) as total_copies FROM books"
-      ),
+      pool
+        .execute(
+          "SELECT COUNT(*) as count, SUM(total_copies) as total_copies FROM books"
+        )
+        .catch((err) => {
+          console.error("❌ Books query error:", err.message);
+          throw err;
+        }),
 
       // Total active students
-      pool.execute(
-        'SELECT COUNT(*) as count FROM students WHERE status = "active"'
-      ),
+      pool
+        .execute(
+          'SELECT COUNT(*) as count FROM students WHERE status = "active"'
+        )
+        .catch((err) => {
+          console.error("❌ Students query error:", err.message);
+          throw err;
+        }),
 
       // Currently issued books
-      pool.execute(
-        'SELECT COUNT(*) as count FROM issued_books WHERE status = "issued"'
-      ),
+      pool
+        .execute(
+          'SELECT COUNT(*) as count FROM issued_books WHERE status = "issued"'
+        )
+        .catch((err) => {
+          console.error("❌ Issued books query error:", err.message);
+          throw err;
+        }),
 
       // Overdue books
-      pool.execute(`
+      pool
+        .execute(
+          `
         SELECT COUNT(*) as count, 
                COALESCE(SUM(DATEDIFF(CURDATE(), due_date) * 1.00), 0) as total_overdue_fines
         FROM issued_books 
         WHERE status = "issued" AND due_date < CURDATE()
-      `),
+      `
+        )
+        .catch((err) => {
+          console.error("❌ Overdue books query error:", err.message);
+          throw err;
+        }),
 
       // Total fines collected
-      pool.execute(
-        'SELECT COALESCE(SUM(paid_amount), 0) as total FROM fines WHERE status = "paid"'
-      ),
+      pool
+        .execute(
+          'SELECT COALESCE(SUM(paid_amount), 0) as total FROM fines WHERE status = "paid"'
+        )
+        .catch((err) => {
+          console.error("❌ Fines query error:", err.message);
+          throw err;
+        }),
 
       // Recent activities (last 10 transactions)
-      pool.execute(`
+      pool
+        .execute(
+          `
         SELECT 
           ib.id,
           s.register_number,
@@ -63,8 +94,15 @@ router.get("/stats", async (req, res) => {
         JOIN books b ON ib.book_id = b.id
         ORDER BY ib.created_at DESC
         LIMIT 10
-      `),
+      `
+        )
+        .catch((err) => {
+          console.error("❌ Recent activities query error:", err.message);
+          throw err;
+        }),
     ]);
+
+    console.log("✅ All queries completed successfully");
 
     const stats = {
       totalBooks: totalBooksResult[0][0].count,
@@ -93,6 +131,8 @@ router.get("/stats", async (req, res) => {
       status: activity.status,
       fineAmount: activity.fine_amount || 0,
     }));
+
+    console.log("📊 Dashboard stats prepared:", stats);
 
     res.status(200).json({
       status: "success",

@@ -63,7 +63,7 @@ export const libraryAPI = {
     api.post("/auth/reset-password", { token, password }),
 
   // Dashboard
-  getDashboardStats: () => api.get("/dashboard"),
+  getDashboardStats: () => api.get("/dashboard/stats"),
 
   // Books
   getBooks: (params = {}) => api.get("/books", { params }),

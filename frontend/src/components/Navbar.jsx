@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Bars3Icon,
@@ -18,6 +18,7 @@ import {
   ClipboardDocumentListIcon,
   TagIcon,
   CalendarDaysIcon,
+  MapPinIcon,
 } from "@heroicons/react/24/outline";
 
 function Navbar({ user, onLogout }) {
@@ -28,7 +29,47 @@ function Navbar({ user, onLogout }) {
   const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Timeout refs for dropdown management
+  const booksTimeoutRef = useRef(null);
+  const toolsTimeoutRef = useRef(null);
+
   const navigate = useNavigate();
+
+  // Dropdown timeout management
+  const handleBooksMouseEnter = () => {
+    if (booksTimeoutRef.current) {
+      clearTimeout(booksTimeoutRef.current);
+    }
+    setBooksDropdownOpen(true);
+  };
+
+  const handleBooksMouseLeave = () => {
+    booksTimeoutRef.current = setTimeout(() => {
+      setBooksDropdownOpen(false);
+    }, 150);
+  };
+
+  const handleToolsMouseEnter = () => {
+    if (toolsTimeoutRef.current) {
+      clearTimeout(toolsTimeoutRef.current);
+    }
+    setToolsDropdownOpen(true);
+  };
+
+  const handleToolsMouseLeave = () => {
+    toolsTimeoutRef.current = setTimeout(() => {
+      setToolsDropdownOpen(false);
+    }, 150);
+  };
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (booksTimeoutRef.current) clearTimeout(booksTimeoutRef.current);
+      if (toolsTimeoutRef.current) clearTimeout(toolsTimeoutRef.current);
+    };
+  }, []);
 
   const handleLogout = () => {
     setProfileDropdownOpen(false);
@@ -86,23 +127,19 @@ function Navbar({ user, onLogout }) {
           </Link>
 
           {/* Books Dropdown */}
-          <div className="relative">
-            <button
-              onMouseEnter={() => setBooksDropdownOpen(true)}
-              onMouseLeave={() => setBooksDropdownOpen(false)}
-              className="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-green-600 px-3 py-2 rounded-md hover:bg-gray-50"
-            >
+          <div
+            className="relative"
+            onMouseEnter={handleBooksMouseEnter}
+            onMouseLeave={handleBooksMouseLeave}
+          >
+            <button className="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-green-600 px-3 py-2 rounded-md hover:bg-gray-50">
               <BookOpenIcon className="w-4 h-4" />
               <span>Books</span>
               <ChevronDownIcon className="w-3 h-3" />
             </button>
-            
+
             {booksDropdownOpen && (
-              <div 
-                className="absolute left-0 z-20 mt-1 w-48 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5"
-                onMouseEnter={() => setBooksDropdownOpen(true)}
-                onMouseLeave={() => setBooksDropdownOpen(false)}
-              >
+              <div className="absolute left-0 z-20 mt-0 w-48 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-200 ease-in-out">
                 <Link
                   to="/books"
                   className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -160,29 +197,32 @@ function Navbar({ user, onLogout }) {
           </Link>
 
           {/* Tools Dropdown */}
-          <div className="relative">
-            <button
-              onMouseEnter={() => setToolsDropdownOpen(true)}
-              onMouseLeave={() => setToolsDropdownOpen(false)}
-              className="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-green-600 px-3 py-2 rounded-md hover:bg-gray-50"
-            >
+          <div
+            className="relative"
+            onMouseEnter={handleToolsMouseEnter}
+            onMouseLeave={handleToolsMouseLeave}
+          >
+            <button className="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-green-600 px-3 py-2 rounded-md hover:bg-gray-50">
               <SparklesIcon className="w-4 h-4" />
               <span>Tools</span>
               <ChevronDownIcon className="w-3 h-3" />
             </button>
-            
+
             {toolsDropdownOpen && (
-              <div 
-                className="absolute left-0 z-20 mt-1 w-48 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5"
-                onMouseEnter={() => setToolsDropdownOpen(true)}
-                onMouseLeave={() => setToolsDropdownOpen(false)}
-              >
+              <div className="absolute left-0 z-20 mt-0 w-48 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-200 ease-in-out">
                 <Link
                   to="/ai-features"
                   className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   <SparklesIcon className="w-4 h-4" />
                   <span>AI Assistant</span>
+                </Link>
+                <Link
+                  to="/gps-tracking"
+                  className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <MapPinIcon className="w-4 h-4" />
+                  <span>GPS Tracking</span>
                 </Link>
                 <Link
                   to="/qr-generator"
@@ -211,7 +251,10 @@ function Navbar({ user, onLogout }) {
         </nav>
 
         {/* Search form */}
-        <form onSubmit={handleSearch} className="relative flex items-center max-w-md">
+        <form
+          onSubmit={handleSearch}
+          className="relative flex items-center max-w-md"
+        >
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg
               className="h-4 w-4 text-gray-400"
@@ -423,7 +466,10 @@ function Navbar({ user, onLogout }) {
         </div>
 
         {/* Click outside to close dropdowns */}
-        {(profileDropdownOpen || notificationDropdownOpen || booksDropdownOpen || toolsDropdownOpen) && (
+        {(profileDropdownOpen ||
+          notificationDropdownOpen ||
+          booksDropdownOpen ||
+          toolsDropdownOpen) && (
           <div
             className="fixed inset-0 z-0"
             onClick={() => {
@@ -448,7 +494,7 @@ function Navbar({ user, onLogout }) {
               <HomeIcon className="w-5 h-5" />
               <span>Dashboard</span>
             </Link>
-            
+
             {/* Books Section */}
             <div className="border-l-2 border-gray-200 pl-4">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
@@ -496,7 +542,7 @@ function Navbar({ user, onLogout }) {
               <UsersIcon className="w-5 h-5" />
               <span>Students</span>
             </Link>
-            
+
             <Link
               to="/issue"
               className="flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-gray-50 rounded-md"
@@ -505,7 +551,7 @@ function Navbar({ user, onLogout }) {
               <DocumentTextIcon className="w-5 h-5" />
               <span>Issue Books</span>
             </Link>
-            
+
             <Link
               to="/return"
               className="flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-gray-50 rounded-md"

@@ -21,6 +21,8 @@ import Settings from "./pages/Settings";
 import ProfileSettings from "./pages/ProfileSettings";
 import MyLibraryHistory from "./pages/MyLibraryHistory";
 import SearchResults from "./pages/SearchResults";
+import GPSLibraryTracking from "./pages/GPSLibraryTracking";
+import StudentLocationSettings from "./pages/StudentLocationSettings";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 
 function App() {
@@ -83,6 +85,14 @@ function App() {
                   <Route path="/return" element={<ReturnBooks />} />
                   <Route path="/reservations" element={<Reservations />} />
                   <Route path="/ai-features" element={<AIFeatures />} />
+                  <Route
+                    path="/gps-tracking"
+                    element={<GPSLibraryTracking />}
+                  />
+                  <Route
+                    path="/location-settings"
+                    element={<StudentLocationSettings />}
+                  />
                   <Route path="/qr-generator" element={<QRCodeGenerator />} />
                   <Route
                     path="/notifications"
@@ -91,7 +101,10 @@ function App() {
                   <Route path="/reports" element={<Reports />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/profile" element={<ProfileSettings />} />
-                  <Route path="/library-history" element={<MyLibraryHistory />} />
+                  <Route
+                    path="/library-history"
+                    element={<MyLibraryHistory />}
+                  />
                   <Route path="/search" element={<SearchResults />} />
                   <Route
                     path="/"

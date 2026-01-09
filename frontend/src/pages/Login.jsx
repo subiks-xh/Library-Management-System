@@ -41,6 +41,20 @@ function Login() {
     },
   });
 
+  // Demo login mutation
+  const demoLoginMutation = useMutation({
+    mutationFn: (role) => libraryAPI.demoLogin({ role }),
+    onSuccess: (response) => {
+      login(response.data.token, response.data.user);
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      setErrors({
+        general: error.response?.data?.message || "Demo login failed.",
+      });
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
@@ -77,6 +91,11 @@ function Login() {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
+  };
+
+  const handleDemoLogin = (role) => {
+    setErrors({});
+    demoLoginMutation.mutate(role);
   };
 
   return (
@@ -226,19 +245,37 @@ function Login() {
 
           {/* Demo Credentials */}
           <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h4 className="text-sm font-medium text-blue-800 mb-2">
-              Demo Credentials:
+            <h4 className="text-sm font-medium text-blue-800 mb-3">
+              Quick Demo Login:
             </h4>
-            <div className="text-xs text-blue-600 space-y-1">
-              <p>
-                <strong>Admin:</strong> admin@library.edu.in / admin123
-              </p>
-              <p>
-                <strong>Librarian:</strong> librarian@library.edu.in / lib123
-              </p>
-              <p>
-                <strong>Student:</strong> student@college.edu.in / student123
-              </p>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => handleDemoLogin('admin')}
+                disabled={demoLoginMutation.isLoading}
+                className="px-3 py-2 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDemoLogin('librarian')}
+                disabled={demoLoginMutation.isLoading}
+                className="px-3 py-2 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 disabled:opacity-50"
+              >
+                Librarian
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDemoLogin('student')}
+                disabled={demoLoginMutation.isLoading}
+                className="px-3 py-2 bg-purple-600 text-white text-xs font-medium rounded hover:bg-purple-700 disabled:opacity-50"
+              >
+                Student
+              </button>
+            </div>
+            <div className="mt-2 text-xs text-blue-600">
+              <p>Click any button above for instant demo access</p>
             </div>
           </div>
 

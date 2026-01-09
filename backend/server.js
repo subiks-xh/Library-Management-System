@@ -18,6 +18,7 @@ const fineRoutes = require("./routes/fines");
 const reportRoutes = require("./routes/reports");
 const bookingsRoutes = require("./routes/bookings");
 const questionPapersRoutes = require("./routes/question-papers");
+const gpsTrackingRoutes = require("./routes/gps-tracking");
 
 // Import middleware
 const errorHandler = require("./middleware/errorHandler");
@@ -79,6 +80,7 @@ app.use("/api/fines", fineRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/bookings", bookingsRoutes);
 app.use("/api/question-papers", questionPapersRoutes);
+app.use("/api/gps-tracking", gpsTrackingRoutes);
 
 // 404 handler
 app.use("*", (req, res) => {
